@@ -1,0 +1,144 @@
+.card {
+  margin: 50px auto;
+  width: 80%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 50px;
+  background-color: #fff;
+}
+
+.title_btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem 0rem 1rem;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #0ea7aa;
+}
+
+.span {
+  color: #4b5259;
+}
+
+.addButton {
+  padding: 1rem 3rem 1rem 3rem;
+  background: #0ea7aa;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.searchArea {
+  display: flex;
+}
+
+.search {
+  color: #4b5259;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  border-radius: 10px;
+}
+
+.paginationControls {
+  display: flex;
+  align-items: center;
+}
+
+.itemsPerPageSelect {
+  margin: 0 10px;
+}
+.actionsColumn {
+  width: 15%;
+  color: white;
+}
+
+.titletab {
+  color: white;
+  text-align: left;
+}
+
+.dataTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.tr_title {
+  background-color: #0ea7aa;
+}
+
+.dataTable th,
+.dataTable td {
+  padding: 10px;
+}
+
+.evenRow {
+  background-color: #f9f9f9;
+}
+
+.oddRow {
+  background-color: #f0f0f0;
+}
+
+.editBtn {
+  display: flex;
+  background-color: #ff9922;
+  border: none;
+  padding: 10px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.deleteBtn {
+  display: flex;
+  background-color: #ff5858;
+  border: none;
+  padding: 10px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.editBtn:hover {
+  background-color: #e28317;
+}
+
+.deleteBtn:hover {
+  background-color: #fc3b3b;
+}
+
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  list-style: none;
+  margin: 20px 0;
+  padding: 0;
+}
+
+.pagination > li {
+  margin: 0 5px;
+}
+
+.activePage > a {
+  background-color: #0ea7aa;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 20px;
+}
+
+.actions {
+  margin: 0px;
+  padding: 0px;
+  display: flex;
+  text-align: center;
+  gap: 10px;
+  justify-content: center;
+}
