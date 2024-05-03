@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import styles from '../styles/Categories.module.css';
+import styles from './Categories.module.css';
 import ReactPaginate from 'react-paginate';
-import AddLayer from '../assets/Add-Layer.svg';
-import Edit from '../assets/pencil-square.svg';
-import Delete from '../assets/trash-fill.svg';
+import AddLayer from '../../assets/Add-Layer.svg';
+import Edit from '../../assets/pencil-square.svg';
+import Delete from '../../assets/trash-fill.svg';
 
-const Categories = () => {
+const Categoria = () => {
     const initialCategories = [
         { id: 1, title: 'Lorem Ipsum Dolor' },
         { id: 2, title: 'Lorem Ipsum Dolor' },
@@ -92,7 +92,7 @@ const Categories = () => {
                 </thead>
                 <tbody>
                     {displayCategories.map((cat, idx) => (
-                        <tr key={idx} className={idx % 2 == 0 ? styles.evenRow : styles.oddRow}>
+                        <tr key={idx} className={idx % 2 === 0 ? styles.evenRow : styles.oddRow}>
                             <td>{cat.title}</td>
                             <td className={styles.actions}>
                                 <a className={styles.editBtn}><img src={Edit} /></a>
@@ -114,4 +114,4 @@ const Categories = () => {
     );
 };
 
-export default Categories;
+export { Categoria };

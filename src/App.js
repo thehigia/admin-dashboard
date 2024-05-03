@@ -1,19 +1,15 @@
-// src/App.js
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-// import { Home } from './pages/Home';
-import Categories from './pages/Categories';
-
+import { AppContextProvider } from './contexts';
+import { BrowserRouter } from 'react-router-dom';
+import { Router } from './Router';
 
 const App = () => {
   return (
-    <Router>
-      <Routes>
-        {/* <Route path="/" element={<Home />} /> */}
-        <Route path="/categories" element={<Categories />} />
-        {/* <Route path="*" element={<NotFound />} /> */}
-      </Routes>
-    </Router>
+    <AppContextProvider>
+      <BrowserRouter>
+        <Router />
+      </BrowserRouter>
+    </AppContextProvider>
   );
 };
 
