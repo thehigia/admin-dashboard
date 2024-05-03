@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom"
-import { Cabecalho, Conteudo, Footer } from "../../components"
+import { Cabecalho, Conteudo, Sidebar } from "../../components"
 
 const LayoutsPadrao = () => {
     return (
@@ -8,7 +8,7 @@ const LayoutsPadrao = () => {
             <Conteudo>
                 <Outlet />
             </Conteudo>
-            <Footer />
+            <Sidebar />
         </>
     )
 }
