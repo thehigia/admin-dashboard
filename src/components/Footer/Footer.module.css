@@ -1,11 +1,12 @@
 .sidebar {
+  display: flex;
+  justify-content: center;
   position: absolute;
-  top: 32px;
+  top: 75px;
   left: 0;
-  width: 5%;
+  width: 46px;
   height: 100%;
-  background-color: blue;
-  padding: 20px;
+  background-color: #0ea7aa;
   box-sizing: border-box;
 }
 
@@ -16,11 +17,9 @@
 }
 
 .item {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+  padding-block: 1rem;
 }
 
 .item:hover {
-  background-color: #eee;
   cursor: pointer;
 }

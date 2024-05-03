@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useAppContext } from '../../hooks';
 import styles from './Categories.module.css';
 import ReactPaginate from 'react-paginate';
 import AddLayer from '../../assets/Add-Layer.svg';
@@ -6,6 +7,9 @@ import Edit from '../../assets/pencil-square.svg';
 import Delete from '../../assets/trash-fill.svg';
 
 const Categoria = () => {
+    const { category } = useAppContext();
+    console.log("Teste", category)
+
     const initialCategories = [
         { id: 1, title: 'Lorem Ipsum Dolor' },
         { id: 2, title: 'Lorem Ipsum Dolor' },

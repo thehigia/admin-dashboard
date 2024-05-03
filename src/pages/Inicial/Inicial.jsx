@@ -5,7 +5,7 @@ const Inicial = () => {
 
     return (
         <div className={style.Inicial}>
-            {/* <Categoria /> */}Olá
+            <Categoria />
         </div>
     )
 }
