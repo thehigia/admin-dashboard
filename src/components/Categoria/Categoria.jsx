@@ -72,6 +72,7 @@ const Categoria = () => {
 
     return (
         <div className={styles.card}>
+
             <header>
                 <div className={styles.title_btn}>
                     <div className={styles.title}>
@@ -106,6 +107,7 @@ const Categoria = () => {
                     </div>
                 </div>
             </header>
+
             <table className={styles.dataTable}>
                 <thead>
                     <tr className={styles.tr_title}>
@@ -125,6 +127,7 @@ const Categoria = () => {
                     ))}
                 </tbody>
             </table>
+
             <ReactPaginate
                 previousLabel="Anterior"
                 nextLabel="Próximo"
@@ -134,6 +137,7 @@ const Categoria = () => {
                 activeClassName={styles.activePage}
             />
 
+            {/* MODAL CATEGORIA */}
             {showModal && (
                 <div className={styles.modal}>
                     <div className={styles.modalContent}>
@@ -173,6 +177,7 @@ const Categoria = () => {
                 </div>
             )
             }
+            {/* FIM MODAL CATEGORIA */}
         </div>
     );
 };

@@ -7,5 +7,11 @@
 }
 
 .logo {
-  margin: 5px 415px 5px;
+  margin: 0.3125rem 25rem 0.3125rem;
+}
+
+@media (max-width: 600px) {
+  .logo {
+    margin: 0.3125rem 5rem 0.3125rem; /* Zera a margem para telas pequenas */
+  }
 }
