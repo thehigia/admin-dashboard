@@ -6,29 +6,39 @@ export const AppContext = createContext({});
 export const AppContextProvider = (props) => {
     const { children } = props;
     const [category, setCategory] = useState([]);
+    const [getTotal, setGetTotal] = useState(0);
     // const [loadingCriar, setLoadingCriar] = useState(false);
     // const [loadingEditar, setLoadingEditar] = useState(null);
     // const [loadingRemover, setLoadingRemover] = useState(null);
     // const [loadingCarregar, setLoadingCarregar] = useState(false);
 
     const getCateg = async () => {
-        const { data = [] } = await api.get('/content/category/all');
-        setCategory([
-            ...data,
-        ])
-    }
+        try {
+            const { data = [] } = await api.get('/content/category/all');
 
-    // const adicionarTatefa = async (nomeTarefa) => {
-    //     const { data: tarefa } = await api.post('/tarefas', {
-    //         nome: nomeTarefa,
-    //     })
-    //     setCategory(estadoAtual => {
-    //         return [
-    //             ...estadoAtual,
-    //             tarefa,
-    //         ]
-    //     });
-    // }
+            const getTotal = data.length;
+
+            setCategory([...data])
+
+            setGetTotal(getTotal);
+        } catch (error) {
+            console.error('Erro ao carregar registros:', error);
+        }
+    };
+
+    const addCateg = async (titleCategory) => {
+        const { data: catego } = await api.post('/content/category/create', {
+            title: titleCategory,
+        })
+        setCategory(estadoAtual => {
+            return [
+                ...estadoAtual,
+                catego,
+            ]
+        });
+
+        getCateg();
+    }
 
     // const removerTarefa = async (idTarefa) => {
     //     await api.delete(`tarefas/${idTarefa}`);
@@ -60,13 +70,14 @@ export const AppContextProvider = (props) => {
     // }
 
     useEffect(() => {
-        // getCateg();
+        getCateg();
     }, [])
 
     return (
         <AppContext.Provider value={{
             category,
             getCateg,
+            addCateg,
             // removerTarefa,
             // editarTarefa,
         }}>
