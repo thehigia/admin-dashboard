@@ -3,13 +3,16 @@ import { useAppContext } from '../../hooks';
 import styles from './Categories.module.css';
 import ReactPaginate from 'react-paginate';
 import AddLayer from '../../assets/Add-Layer.svg';
-import Edit from '../../assets/pencil-square.svg';
-import Delete from '../../assets/trash-fill.svg';
+
 import Search from '../../assets/ion_search.svg';
 import { ModalCategory } from '../Modals/ModalCategory/ModalCategory';
+import { Feedback } from '../Feedback';
+import { BotaoDelete } from '../Botao/BotaoDelete';
+import { BotaoEdit } from '../Botao/BoataoEdit';
+
 
 const Categoria = () => {
-    const { category } = useAppContext();
+    const { category, removerCateg, editCateg, loadingDelete } = useAppContext();
     const [categories, setCategories] = useState(category || []);
     const [showModal, setShowModal] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
@@ -18,7 +21,6 @@ const Categoria = () => {
     const pagesVisited = pageNumber * itemsPerPage;
 
     const handleAddClick = () => {
-        console.log('Adding');
         setShowModal(true);
     };
 
@@ -41,11 +43,6 @@ const Categoria = () => {
 
     const handlePageClick = ({ selected }) => {
         setPageNumber(selected);
-    };
-
-    const handleDelete = (index) => {
-        const newCategories = categories.filter((_, i) => i !== index);
-        setCategories(newCategories);
     };
 
     return (
@@ -99,8 +96,14 @@ const Categoria = () => {
                         <tr key={idx} className={idx % 2 === 0 ? styles.evenRow : styles.oddRow}>
                             <td>{cat.title}</td>
                             <td className={styles.actions}>
-                                <a className={styles.editBtn}><img src={Edit} /></a>
-                                <a className={styles.deleteBtn} onClick={() => handleDelete(idx)}><img src={Delete} /></a>
+                                <BotaoEdit
+                                    // loading={loadingDelete}
+                                    onClick={() => editCateg(cat.id)}
+                                />
+                                <BotaoDelete
+                                    loading={loadingDelete}
+                                    onClick={() => removerCateg(cat.id)}
+                                />
                             </td>
                         </tr>
                     ))}
@@ -115,10 +118,14 @@ const Categoria = () => {
                 containerClassName={styles.pagination}
                 activeClassName={styles.activePage}
             />
+            {loadingDelete && (
+                <Feedback />
+            )}
             {showModal && (
                 <ModalCategory onClose={handleCloseModal} />
             )
             }
+
         </div>
     );
 };

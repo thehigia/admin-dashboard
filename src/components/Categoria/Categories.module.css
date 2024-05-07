@@ -110,31 +110,6 @@
   background-color: #f0f0f0;
 }
 
-.editBtn {
-  display: flex;
-  background-color: #ff9922;
-  border: none;
-  padding: 10px 10px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-.deleteBtn {
-  display: flex;
-  background-color: #ff5858;
-  border: none;
-  padding: 10px 10px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.editBtn:hover {
-  background-color: #e28317;
-}
-
-.deleteBtn:hover {
-  background-color: #fc3b3b;
-}
-
 .pagination {
   display: flex;
   justify-content: flex-end;

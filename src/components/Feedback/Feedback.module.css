@@ -1,0 +1,13 @@
+.feedbackContainer {
+  padding: 15px;
+  background-color: #e9c6c6;
+  border: 1px solid #412626;
+  border-radius: 4px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.feedbackText {
+  color: #763c3c;
+  margin: 0;
+}

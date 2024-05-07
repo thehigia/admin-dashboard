@@ -6,8 +6,7 @@ export const AppContext = createContext({});
 export const AppContextProvider = (props) => {
     const { children } = props;
     const [category, setCategory] = useState([]);
-    const [getTotal, setGetTotal] = useState(0);
-    // const [loadingCriar, setLoadingCriar] = useState(false);
+    const [loadingDelete, setLoadingDelete] = useState(false);
     // const [loadingEditar, setLoadingEditar] = useState(null);
     // const [loadingRemover, setLoadingRemover] = useState(null);
     // const [loadingCarregar, setLoadingCarregar] = useState(false);
@@ -20,7 +19,6 @@ export const AppContextProvider = (props) => {
 
             setCategory([...data])
 
-            setGetTotal(getTotal);
         } catch (error) {
             console.error('Erro ao carregar registros:', error);
         }
@@ -40,34 +38,44 @@ export const AppContextProvider = (props) => {
         getCateg();
     }
 
-    // const removerTarefa = async (idTarefa) => {
-    //     await api.delete(`tarefas/${idTarefa}`);
-    //     setCategory(estadoAtual => {
-    //         const tarefasAtualizadas = estadoAtual.filter(tarefa => tarefa.id !== idTarefa);
+    const removerCateg = async (idCateg) => {
+        setLoadingDelete(true);
+        try {
+            await api.delete(`/content/category/delete/${idCateg}`);
+            setCategory(estadoAtual => {
+                const categoriasAtualizadas = estadoAtual.filter(categ => categ.id !== idCateg);
 
-    //         return [
-    //             ...tarefasAtualizadas,
-    //         ];
-    //     });
-    // };
+                return [
+                    ...categoriasAtualizadas,
+                ];
+            });
 
-    // const editarTarefa = async (idTarefa, nomeTarefa) => {
-    //     const { data: tarefaAtualizada } = await api.put(`tarefas/${idTarefa}`, {
-    //         nome: nomeTarefa,
-    //     })
-    //     setCategory(estadoAtual => {
-    //         const tarefasAtualizadas = estadoAtual.map(tarefa => {
-    //             return tarefa.id === idTarefa ? {
-    //                 ...tarefa,
-    //                 nome: tarefaAtualizada.nome,
-    //             } : tarefa;
-    //         });
+        } catch (error) {
+            setTimeout(() => {
+                setLoadingDelete(false);
+            }, 3000);
+            console.log('Essa categoria não pode ser removida!', error);
+            // Trate o erro como necessário
+        }
+    };
 
-    //         return [
-    //             ...tarefasAtualizadas,
-    //         ]
-    //     })
-    // }
+    const editCateg = async (idCateg, titleCategory) => {
+        const { data: catego } = await api.put(`/content/category/update/${idCateg}`, {
+            title: titleCategory,
+        })
+        setCategory(estadoAtual => {
+            const categoriasAtualizadas = estadoAtual.map(categ => {
+                return categ.id === idCateg ? {
+                    ...categ,
+                    title: catego.nome,
+                } : categ;
+            });
+
+            return [
+                ...categoriasAtualizadas,
+            ]
+        })
+    }
 
     useEffect(() => {
         getCateg();
@@ -78,8 +86,9 @@ export const AppContextProvider = (props) => {
             category,
             getCateg,
             addCateg,
-            // removerTarefa,
-            // editarTarefa,
+            removerCateg,
+            editCateg,
+            loadingDelete
         }}>
             {children}
         </AppContext.Provider>

@@ -1,0 +1,12 @@
+.editBtn {
+  display: flex;
+  background-color: #ff9922;
+  border: none;
+  padding: 10px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.editBtn:hover {
+  background-color: #e28317;
+}
