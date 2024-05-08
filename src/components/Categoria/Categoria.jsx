@@ -19,13 +19,21 @@ const Categoria = () => {
     const [itemsPerPage, setItemsPerPage] = useState(5);
     const [pageNumber, setPageNumber] = useState(0);
     const pagesVisited = pageNumber * itemsPerPage;
+    const [editingCategory, setEditingCategory] = useState(null);
 
-    const handleAddClick = () => {
+    const handleEditClick = (category) => {
+        setEditingCategory(category); // Verifique se 'category' é um objeto válido com 'id'
         setShowModal(true);
     };
 
-    const handleCloseModal = () => {
+    const saveEditedCategory = (newTitle) => {
+        editCateg(editingCategory.id, newTitle);
+        setEditingCategory(null);
         setShowModal(false);
+    };
+
+    const handleAddClick = () => {
+        setShowModal(true);
     };
 
     useEffect(() => {
@@ -98,10 +106,10 @@ const Categoria = () => {
                             <td className={styles.actions}>
                                 <BotaoEdit
                                     // loading={loadingDelete}
-                                    onClick={() => editCateg(cat.id)}
+                                    onClick={() => handleEditClick(cat)}
                                 />
                                 <BotaoDelete
-                                    loading={loadingDelete}
+                                    // loading={loadingDelete}
                                     onClick={() => removerCateg(cat.id)}
                                 />
                             </td>
@@ -122,7 +130,15 @@ const Categoria = () => {
                 <Feedback />
             )}
             {showModal && (
-                <ModalCategory onClose={handleCloseModal} />
+                <ModalCategory
+                    onClose={() => {
+                        setEditingCategory(null);
+                        setShowModal(false);
+                    }}
+                    initialTitle={editingCategory ? editingCategory.title : ''}
+                    onSave={saveEditedCategory}
+                    isEditing={Boolean(editingCategory)}
+                />
             )
             }
 

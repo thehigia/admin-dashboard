@@ -2,38 +2,47 @@ import { useState } from "react";
 import styles from './ModalCategory.module.css';
 import { useAppContext } from "../../../hooks";
 
-const ModalCategory = ({ onClose }) => {
+const ModalCategory = ({ onClose, initialTitle = '', onSave, isEditing = false }) => {
     const { addCateg } = useAppContext();
-    // const [showModal, setShowModal] = useState(false);
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
+    const [title, setTitle] = useState(initialTitle);
 
     const handleSave = () => {
-        addCateg(title);
-        setTitle(''); // Reset the title state
-        onClose(false); // Close the modal after saving
+        if (!title.trim()) {
+            return;  // Garante que não salvamos títulos vazios ou apenas com espaços.
+        }
+
+        if (isEditing) {
+            // Se está editando, chama função de editar
+            onSave(title);
+        } else {
+            // Se está adicionando, chama função de adicionar
+            addCateg(title);
+        }
+
+        setTitle('');  // Limpa o título após salvar
+        onClose();  // Fecha o modal
     };
 
     const onChangeNomeTarefa = (event) => {
         setTitle(event.currentTarget.value)
     }
 
-    const submeterForm = () => {
-        // eslint-disable-next-line no-restricted-globals
+    const submeterForm = (event) => {
         event.preventDefault();
 
         if (!title) {
             return;
         }
-        addCateg(title)
+        onSave(title)
 
         setTitle('')
     }
+
     return (
         <div className={styles.modal}>
             <div className={styles.modalContent}>
-                <h3 className={styles.titleModal}>Nova Categoria</h3>
-                <p className={styles.subtitleModal}>Preencha os campos abaixo para criar uma nova categoria</p>
+                <h3 className={styles.titleModal}>{isEditing ? 'Editar Categoria' : 'Nova Categoria'}</h3>
+                <p className={styles.subtitleModal}>Preencha o campo abaixo para criar uma nova categoria</p>
                 <form className={styles.form} onSubmit={submeterForm}>
                     <div className={styles.labMod}>
                         <label className={styles.labelModal}>Título</label>
@@ -45,15 +54,6 @@ const ModalCategory = ({ onClose }) => {
                             onChange={onChangeNomeTarefa}
                         />
                     </div>
-                    {/* <div className={styles.labMod}>
-                        <label className={styles.labelModal}>Descrição</label>
-                        <textarea
-                            className={styles.textArea}
-                            placeholder='Breve descrição sobre a categoria criada...'
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                        />
-                    </div> */}
                     <div className={styles.modalButtons}>
                         <a className={styles.btnCancel} onClick={onClose}>Cancelar</a>
                         <a className={styles.btnSave} onClick={handleSave}>Salvar</a>

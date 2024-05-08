@@ -15,8 +15,6 @@ export const AppContextProvider = (props) => {
         try {
             const { data = [] } = await api.get('/content/category/all');
 
-            const getTotal = data.length;
-
             setCategory([...data])
 
         } catch (error) {
@@ -53,29 +51,39 @@ export const AppContextProvider = (props) => {
         } catch (error) {
             setTimeout(() => {
                 setLoadingDelete(false);
-            }, 3000);
+            }, 2000);
             console.log('Essa categoria não pode ser removida!', error);
             // Trate o erro como necessário
         }
     };
 
     const editCateg = async (idCateg, titleCategory) => {
-        const { data: catego } = await api.put(`/content/category/update/${idCateg}`, {
-            title: titleCategory,
-        })
-        setCategory(estadoAtual => {
-            const categoriasAtualizadas = estadoAtual.map(categ => {
-                return categ.id === idCateg ? {
-                    ...categ,
-                    title: catego.nome,
-                } : categ;
+        console.log("idCateg:", idCateg, "titleCategory:", titleCategory);
+        try {
+            const { data: catego } = await api.put(`/content/category/update/${idCateg}`, {
+                title: titleCategory,
+            });
+            setCategory(estadoAtual => {
+                const categoriasAtualizadas = estadoAtual.map(categ => {
+                    return categ.id === idCateg ? {
+                        ...categ,
+                        title: catego.title, // Certifique-se que 'nome' é a propriedade correta
+                    } : categ;
+                });
+
+                return [
+                    ...categoriasAtualizadas,
+                ];
             });
 
-            return [
-                ...categoriasAtualizadas,
-            ]
-        })
+            getCateg();
+
+        } catch (error) {
+            console.error('Erro ao atualizar categoria:', error);
+            // Trate o erro conforme necessário
+        }
     }
+
 
     useEffect(() => {
         getCateg();
