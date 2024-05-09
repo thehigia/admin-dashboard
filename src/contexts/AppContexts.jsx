@@ -6,6 +6,7 @@ export const AppContext = createContext({});
 export const AppContextProvider = (props) => {
     const { children } = props;
     const [category, setCategory] = useState([]);
+    const [posts, setPosts] = useState([]);
     const [loadingDelete, setLoadingDelete] = useState(false);
     // const [loadingEditar, setLoadingEditar] = useState(null);
     // const [loadingRemover, setLoadingRemover] = useState(null);
@@ -16,6 +17,17 @@ export const AppContextProvider = (props) => {
             const { data = [] } = await api.get('/content/category/all');
 
             setCategory([...data])
+
+        } catch (error) {
+            console.error('Erro ao carregar registros:', error);
+        }
+    };
+
+    const getPost = async () => {
+        try {
+            const { data = [] } = await api.get('/post/all');
+
+            setPosts([...data])
 
         } catch (error) {
             console.error('Erro ao carregar registros:', error);
@@ -87,11 +99,14 @@ export const AppContextProvider = (props) => {
 
     useEffect(() => {
         getCateg();
+        getPost();
     }, [])
 
     return (
         <AppContext.Provider value={{
             category,
+            posts,
+            getPost,
             getCateg,
             addCateg,
             removerCateg,
