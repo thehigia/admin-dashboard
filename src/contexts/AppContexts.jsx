@@ -7,6 +7,7 @@ export const AppContextProvider = (props) => {
     const { children } = props;
     const [category, setCategory] = useState([]);
     const [posts, setPosts] = useState([]);
+    const [quiz, setQuiz] = useState([]);
     const [loadingDelete, setLoadingDelete] = useState(false);
     // const [loadingEditar, setLoadingEditar] = useState(null);
     // const [loadingRemover, setLoadingRemover] = useState(null);
@@ -34,6 +35,17 @@ export const AppContextProvider = (props) => {
         }
     };
 
+    const getQuiz = async () => {
+        try {
+            const { data = [] } = await api.get('/quiz/all');
+
+            setQuiz([...data])
+
+        } catch (error) {
+            console.error('Erro ao carregar registros:', error);
+        }
+    };
+
     const addCateg = async (titleCategory) => {
         const { data: catego } = await api.post('/content/category/create', {
             title: titleCategory,
@@ -46,6 +58,26 @@ export const AppContextProvider = (props) => {
         });
 
         getCateg();
+    }
+
+    const addPost = async (title, subtitle, category, tags, urlImage, description) => {
+        const { data: pos } = await api.post('/post/create', {
+            title,
+            subtitle,
+            category,
+            urlImage,
+            tags,
+            description,
+
+        })
+        setPosts(estadoAtual => {
+            return [
+                ...estadoAtual,
+                pos,
+            ]
+        });
+
+        getPost();
     }
 
     const removerCateg = async (idCateg) => {
@@ -100,15 +132,19 @@ export const AppContextProvider = (props) => {
     useEffect(() => {
         getCateg();
         getPost();
+        getQuiz();
     }, [])
 
     return (
         <AppContext.Provider value={{
             category,
             posts,
+            quiz,
             getPost,
             getCateg,
+            getQuiz,
             addCateg,
+            addPost,
             removerCateg,
             editCateg,
             loadingDelete

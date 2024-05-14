@@ -10,8 +10,8 @@ const Router = () => {
             <Route path="/" element={<LayoutsPadrao />}>
                 <Route path="/Categoria" element={<Categoria />} />
                 <Route path="/Posts" element={<Posts />} />
-                <Route path="/Quiz" element={<Questao />} />
-                <Route path="/Questao" element={<Quiz />} />
+                <Route path="/Quiz" element={< Quiz />} />
+                <Route path="/Questao" element={<Questao />} />
                 <Route path='/' element={<Inicial />} />
                 <Route path='*' element={<Erro404 />} />
             </Route>

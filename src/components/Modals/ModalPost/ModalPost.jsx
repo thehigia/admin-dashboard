@@ -3,9 +3,13 @@ import styles from './ModalPost.module.css';
 import { useAppContext } from "../../../hooks";
 
 const ModalPost = ({ onClose, initialTitle = '', onSave, isEditing = false }) => {
-    const { addCateg } = useAppContext();
+    const { addPost, category: categories } = useAppContext();
     const [description, setDescription] = useState();
     const [title, setTitle] = useState(initialTitle);
+    const [subtitle, setSubtitle] = useState(initialTitle);
+    const [category, setCategory] = useState(initialTitle);
+    const [tags, setTags] = useState(initialTitle);
+    const [urlImage, setUrlImage] = useState(initialTitle);
 
     const handleSave = () => {
         if (!title.trim()) {
@@ -14,19 +18,20 @@ const ModalPost = ({ onClose, initialTitle = '', onSave, isEditing = false }) =>
 
         if (isEditing) {
             // Se está editando, chama função de editar
-            onSave(title);
+            onSave({ title, subtitle, category, tags, urlImage, description });
         } else {
             // Se está adicionando, chama função de adicionar
-            addCateg(title);
+            addPost({ title, subtitle, category, tags, urlImage, description });
         }
 
         setTitle('');  // Limpa o título após salvar
+        setDescription('');  // Limpa o título após salvar
+        setSubtitle('');  // Limpa o título após salvar
+        setCategory('') // Limpa o título após salvar
+        setTags('');  // Limpa o título após salvar
+        setUrlImage('');  // Limpa o título após salvar
         onClose();  // Fecha o modal
     };
-
-    const onChangeNomeTarefa = (event) => {
-        setTitle(event.currentTarget.value)
-    }
 
     const submeterForm = (event) => {
         event.preventDefault();
@@ -34,9 +39,40 @@ const ModalPost = ({ onClose, initialTitle = '', onSave, isEditing = false }) =>
         if (!title) {
             return;
         }
-        onSave(title)
+        onSave({ title, subtitle, category, tags, urlImage, description });
 
-        setTitle('')
+        setTitle('');  // Limpa o título após salvar
+        setDescription('');  // Limpa o título após salvar
+        setSubtitle('');  // Limpa o título após salvar
+        setCategory('')// Limpa o título após salvar
+        setTags('');  // Limpa o título após salvar
+        setUrlImage('');  // Limpa o título após salvar
+    }
+
+    const onChangeNomeTarefa = (event) => {
+        const { name, value } = event.target;
+        switch (name) {
+            case 'title':
+                setTitle(value);
+                break;
+            case 'subtitle':
+                setSubtitle(value);
+                break;
+            case 'category':
+                setCategory(value);
+                break;
+            case 'tags':
+                setTags(value);
+                break;
+            case 'urlImage':
+                setUrlImage(value);
+                break;
+            case 'description':
+                setDescription(value);
+                break;
+            default:
+                break;
+        }
     }
 
     return (
@@ -54,6 +90,7 @@ const ModalPost = ({ onClose, initialTitle = '', onSave, isEditing = false }) =>
                                     type="text"
                                     placeholder='Escreva o título aqui...'
                                     value={title}
+                                    name="title"
                                     onChange={onChangeNomeTarefa}
                                 />
                             </div>
@@ -63,21 +100,22 @@ const ModalPost = ({ onClose, initialTitle = '', onSave, isEditing = false }) =>
                                     className={styles.input}
                                     type="text"
                                     placeholder='Escreva o subtítulo aqui...'
-                                // value={subtitle}
-                                // onChange={onChangeNomeTarefa}
+                                    value={subtitle}
+                                    name="subtitle"
+                                    onChange={onChangeNomeTarefa}
                                 />
                             </div>
                         </div>
                         <div className={styles.row}>
                             <div className={styles.column}>
                                 <label className={styles.labelModal}>Categoria</label>
-                                <select className={styles.input} >
+                                <select className={styles.input} value={category.title} onChange={(e) => setCategory(e.target.value)}>
                                     <option value="">Selecione uma categoria...</option>
-                                    {/* {onSave.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.title}
-              </option>
-            ))} */}
+                                    {categories.map((cat) => (
+                                        <option key={cat.id} value={cat.title}>
+                                            {cat.title}
+                                        </option>
+                                    ))}
                                 </select>
                             </div>
                             <div className={styles.column}>
@@ -86,8 +124,9 @@ const ModalPost = ({ onClose, initialTitle = '', onSave, isEditing = false }) =>
                                     className={styles.input}
                                     type="text"
                                     placeholder='Cole a URL aqui...'
-                                // value={subtitle}
-                                // onChange={onChangeNomeTarefa}
+                                    value={urlImage}
+                                    name="urlImage"
+                                    onChange={onChangeNomeTarefa}
                                 />
                             </div>
                         </div>
@@ -99,8 +138,9 @@ const ModalPost = ({ onClose, initialTitle = '', onSave, isEditing = false }) =>
                                     className={styles.input}
                                     type="text"
                                     placeholder='Cole a URL aqui...'
-                                // value={subtitle}
-                                // onChange={onChangeNomeTarefa}
+                                    value={tags}
+                                    name="tags"
+                                    onChange={onChangeNomeTarefa}
                                 />
                             </div>
                             <label className={styles.labelModal}>Texto</label>
@@ -108,9 +148,11 @@ const ModalPost = ({ onClose, initialTitle = '', onSave, isEditing = false }) =>
                                 className={styles.textArea}
                                 placeholder='Escreva o corpo da postagem aqui...'
                                 value={description}
-                                onChange={(e) => setDescription(e.target.value)}
+                                name="description"
+                                onChange={onChangeNomeTarefa}
                             />
                         </div>
+
                     </div>
 
                     <div className={styles.modalButtons}>
@@ -122,5 +164,6 @@ const ModalPost = ({ onClose, initialTitle = '', onSave, isEditing = false }) =>
         </div>
     )
 }
+
 
 export { ModalPost }
