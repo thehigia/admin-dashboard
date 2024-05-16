@@ -10,7 +10,7 @@ import OpenBook from '../../assets/Open-Book.svg';
 import { ModalPost } from '../Modal/ModalPost';
 
 const Posts = () => {
-    const { posts, removerCateg, editCateg, loadingDelete } = useAppContext();
+    const { posts, removerPost, editPost, loadingDelete } = useAppContext();
     const [pos, setPos] = useState(posts || []);
     const [showModal, setShowModal] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
@@ -26,7 +26,7 @@ const Posts = () => {
 
     const saveEditedPosts = (newTitle, newSubtitle, newCategory, newTags, newUrlImage, newDescription) => {
         // Edite a categoria com os novos valores
-        editCateg(editingPosts.id, newTitle, newSubtitle, newCategory, newTags, newUrlImage, newDescription);
+        editPost(editingPosts.id, newTitle, newSubtitle, newCategory, newTags, newUrlImage, newDescription);
         // Limpe os campos e feche o modal
         setEditingPosts(null);
         setShowModal(false);
@@ -115,7 +115,7 @@ const Posts = () => {
                                 />
                                 <BotaoDelete
                                     // loading={loadingDelete}
-                                    onClick={() => removerCateg(post.id)}
+                                    onClick={() => removerPost(post.id)}
                                 />
                             </td>
                         </tr>
@@ -132,9 +132,9 @@ const Posts = () => {
                 activeClassName={styles.activePage}
             />
 
-            {loadingDelete && (
+            {/* {loadingDelete && (
                 <Feedback />
-            )}
+            )} */}
 
             {showModal && (
                 <ModalPost

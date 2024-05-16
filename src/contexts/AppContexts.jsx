@@ -103,8 +103,30 @@ export const AppContextProvider = (props) => {
         }
     };
 
+    const removerPost = async (idPost) => {
+        setLoadingDelete(true);
+        try {
+            await api.delete(`/post/${idPost}`);
+            setCategory(estadoAtual => {
+                const postAtualizadas = estadoAtual.filter(post => post.id !== idPost);
+
+                return [
+                    ...postAtualizadas,
+                ];
+            });
+
+            getPost();
+
+        } catch (error) {
+            setTimeout(() => {
+                setLoadingDelete(false);
+            }, 2000);
+            console.log('Essa categoria não pode ser removida!', error);
+            // Trate o erro como necessário
+        }
+    };
+
     const editCateg = async (idCateg, titleCategory) => {
-        console.log("idCateg:", idCateg, "titleCategory:", titleCategory);
         try {
             const { data: catego } = await api.put(`/content/category/update/${idCateg}`, {
                 title: titleCategory,
@@ -130,6 +152,50 @@ export const AppContextProvider = (props) => {
         }
     }
 
+    const editPost = async (idPost, title, subtitle, category, tags, urlImage, description, urlWeb = '', copyright = '') => {
+        try {
+            const { data: posts } = await api.put(`/post/${idPost}`, {
+                title,
+                subtitle,
+                category,
+                urlImage,
+                tags,
+                description,
+                urlWeb,
+                copyright,
+            });
+
+            setPosts(estadoAtual => {
+                const postAtualizadas = estadoAtual.map(post => {
+                    if (post.id === idPost) {
+                        return {
+                            ...post,
+                            title: title || post.title,
+                            subtitle: subtitle || post.subtitle,
+                            category: category || post.category,
+                            urlImage: urlImage || post.urlImage,
+                            tags: tags || post.tags,
+                            description: description || post.description,
+                            urlWeb: urlWeb || post.urlWeb,
+                            copyright: copyright || post.copyright // Certifique-se que 'nome' é a propriedade correta
+                        };
+                    } else {
+                        return post;
+                    }
+                });
+
+                return [
+                    ...postAtualizadas,
+                ];
+            });
+
+            getPost();
+
+        } catch (error) {
+            console.error('Erro ao atualizar categoria:', error);
+            // Trate o erro conforme necessário
+        }
+    }
 
     useEffect(() => {
         getCateg();
@@ -148,7 +214,9 @@ export const AppContextProvider = (props) => {
             addCateg,
             addPost,
             removerCateg,
+            removerPost,
             editCateg,
+            editPost,
             loadingDelete
         }}>
             {children}
