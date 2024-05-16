@@ -60,7 +60,7 @@ export const AppContextProvider = (props) => {
         getCateg();
     }
 
-    const addPost = async (title, subtitle, category, tags, urlImage, description) => {
+    const addPost = async (title, subtitle, category, tags, urlImage, description, urlWeb = '', copyright = '') => {
         const { data: pos } = await api.post('/post/create', {
             title,
             subtitle,
@@ -68,6 +68,8 @@ export const AppContextProvider = (props) => {
             urlImage,
             tags,
             description,
+            urlWeb,
+            copyright,
 
         })
         setPosts(estadoAtual => {

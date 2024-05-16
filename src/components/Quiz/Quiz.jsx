@@ -7,7 +7,7 @@ import { Feedback } from '../Feedback';
 import styles from './Quiz.module.css'
 import Search from '../../assets/ion_search.svg';
 import TaskList from '../../assets/Task.svg';
-import { ModalQuiz } from '../Modals/ModalQuiz/ModalQuiz';
+import { ModalQuiz } from '../Modal';
 
 const Quiz = () => {
     const { quiz, removerCateg, editCateg, loadingDelete } = useAppContext();

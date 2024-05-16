@@ -2,14 +2,14 @@ import { useState } from "react";
 import styles from './ModalPost.module.css';
 import { useAppContext } from "../../../hooks";
 
-const ModalPost = ({ onClose, initialTitle = '', onSave, isEditing = false }) => {
+const ModalPost = ({ onClose, initialTitle = '', initialSubtitle = '', initialCategory = '', initialTags = '', initialUrlImage = '', initialDescription = '', onSave, isEditing = false }) => {
     const { addPost, category: categories } = useAppContext();
-    const [description, setDescription] = useState();
+    const [description, setDescription] = useState(initialDescription);
     const [title, setTitle] = useState(initialTitle);
-    const [subtitle, setSubtitle] = useState(initialTitle);
-    const [category, setCategory] = useState(initialTitle);
-    const [tags, setTags] = useState(initialTitle);
-    const [urlImage, setUrlImage] = useState(initialTitle);
+    const [subtitle, setSubtitle] = useState(initialSubtitle);
+    const [category, setCategory] = useState(initialCategory);
+    const [tags, setTags] = useState(initialTags);
+    const [urlImage, setUrlImage] = useState(initialUrlImage);
 
     const handleSave = () => {
         if (!title.trim()) {
@@ -18,10 +18,10 @@ const ModalPost = ({ onClose, initialTitle = '', onSave, isEditing = false }) =>
 
         if (isEditing) {
             // Se está editando, chama função de editar
-            onSave({ title, subtitle, category, tags, urlImage, description });
+            onSave(title, subtitle, category, tags, urlImage, description);
         } else {
             // Se está adicionando, chama função de adicionar
-            addPost({ title, subtitle, category, tags, urlImage, description });
+            addPost(title, subtitle, category, tags, urlImage, description);
         }
 
         setTitle('');  // Limpa o título após salvar
@@ -39,7 +39,7 @@ const ModalPost = ({ onClose, initialTitle = '', onSave, isEditing = false }) =>
         if (!title) {
             return;
         }
-        onSave({ title, subtitle, category, tags, urlImage, description });
+        onSave(title, subtitle, category, tags, urlImage, description);
 
         setTitle('');  // Limpa o título após salvar
         setDescription('');  // Limpa o título após salvar
@@ -137,7 +137,7 @@ const ModalPost = ({ onClose, initialTitle = '', onSave, isEditing = false }) =>
                                 <input
                                     className={styles.input}
                                     type="text"
-                                    placeholder='Cole a URL aqui...'
+                                    placeholder='Escreva as tags separados por vírgula aqui...'
                                     value={tags}
                                     name="tags"
                                     onChange={onChangeNomeTarefa}

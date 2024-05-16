@@ -5,7 +5,7 @@ import ReactPaginate from 'react-paginate';
 import AddLayer from '../../assets/Add-Layer.svg';
 
 import Search from '../../assets/ion_search.svg';
-import { ModalCategory } from '../Modals/ModalCategory/ModalCategory';
+import { ModalCategory } from '../Modal';
 import { Feedback } from '../Feedback';
 import { BotaoDelete } from '../Botao/BotaoDelete';
 import { BotaoEdit } from '../Botao/BoataoEdit';

@@ -7,7 +7,7 @@ import { Feedback } from '../Feedback';
 import styles from './Posts.module.css'
 import Search from '../../assets/ion_search.svg';
 import OpenBook from '../../assets/Open-Book.svg';
-import { ModalPost } from '../Modals/ModalPost';
+import { ModalPost } from '../Modal/ModalPost';
 
 const Posts = () => {
     const { posts, removerCateg, editCateg, loadingDelete } = useAppContext();
@@ -24,8 +24,10 @@ const Posts = () => {
         setShowModal(true);
     };
 
-    const saveEditedPosts = (newTitle) => {
-        editCateg(editingPosts.id, newTitle);
+    const saveEditedPosts = (newTitle, newSubtitle, newCategory, newTags, newUrlImage, newDescription) => {
+        // Edite a categoria com os novos valores
+        editCateg(editingPosts.id, newTitle, newSubtitle, newCategory, newTags, newUrlImage, newDescription);
+        // Limpe os campos e feche o modal
         setEditingPosts(null);
         setShowModal(false);
     };
@@ -141,6 +143,11 @@ const Posts = () => {
                         setShowModal(false);
                     }}
                     initialTitle={editingPosts ? editingPosts.title : ''}
+                    initialSubtitle={editingPosts ? editingPosts.subtitle : ''}
+                    initialCategory={editingPosts ? editingPosts.category : ''}
+                    initialTags={editingPosts ? editingPosts.tags : ''}
+                    initialUrlImage={editingPosts ? editingPosts.urlImage : ''}
+                    initialDescription={editingPosts ? editingPosts.description : ''}
                     onSave={saveEditedPosts}
                     isEditing={Boolean(editingPosts)}
                 />

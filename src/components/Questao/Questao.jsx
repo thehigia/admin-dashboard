@@ -7,7 +7,7 @@ import { Feedback } from '../Feedback';
 import styles from './Questao.module.css'
 import Search from '../../assets/ion_search.svg';
 import Bullet from '../../assets/Bullet.svg';
-import { ModalQuestao } from '../Modals/ModalQuestao/ModalQuestao';
+import { ModalQuestao } from '../Modal';
 
 const Questao = () => {
     const { quiz, removerCateg, editCateg, loadingDelete } = useAppContext();
