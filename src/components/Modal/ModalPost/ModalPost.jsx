@@ -2,7 +2,7 @@ import { useState } from "react";
 import styles from './ModalPost.module.css';
 import { useAppContext } from "../../../hooks";
 
-const ModalPost = ({ onClose, initialTitle = '', initialSubtitle = '', initialCategory = '', initialTags = '', initialUrlImage = '', initialDescription = '', onSave, isEditing = false }) => {
+const ModalPost = ({ onClose, initialTitle = '', initialSubtitle = '', initialCategory = '', initialTags = '', initialUrlImage = '', initialDescription = '', initialUrlWeb = '', initialCopyright = '', onSave, isEditing = false }) => {
     const { addPost, category: categories } = useAppContext();
     const [description, setDescription] = useState(initialDescription);
     const [title, setTitle] = useState(initialTitle);
@@ -10,6 +10,8 @@ const ModalPost = ({ onClose, initialTitle = '', initialSubtitle = '', initialCa
     const [category, setCategory] = useState(initialCategory);
     const [tags, setTags] = useState(initialTags);
     const [urlImage, setUrlImage] = useState(initialUrlImage);
+    const [urlWeb, setUrlWeb] = useState(initialUrlWeb);
+    const [copyright, setCopyright] = useState(initialCopyright);
 
     const handleSave = () => {
         if (!title.trim()) {
@@ -18,36 +20,42 @@ const ModalPost = ({ onClose, initialTitle = '', initialSubtitle = '', initialCa
 
         if (isEditing) {
             // Se está editando, chama função de editar
-            onSave(title, subtitle, category, tags, urlImage, description);
+            onSave(title, subtitle, category, tags, urlImage, description, urlWeb || '', copyright || '');
         } else {
             // Se está adicionando, chama função de adicionar
-            addPost(title, subtitle, category, tags, urlImage, description);
+            addPost(title, subtitle, category, tags, urlImage, description, urlWeb || '', copyright || '');
         }
 
-        setTitle('');  // Limpa o título após salvar
-        setDescription('');  // Limpa o título após salvar
-        setSubtitle('');  // Limpa o título após salvar
-        setCategory('') // Limpa o título após salvar
-        setTags('');  // Limpa o título após salvar
-        setUrlImage('');  // Limpa o título após salvar
+        // Limpa os campos após salvar
+        setTitle('');
+        setDescription('');
+        setSubtitle('');
+        setCategory('');
+        setTags('');
+        setUrlImage('');
+        setUrlWeb('');
+        setCopyright('');
         onClose();  // Fecha o modal
     };
 
     const submeterForm = (event) => {
         event.preventDefault();
 
-        if (!title) {
+        if (!title.trim()) {
             return;
         }
-        onSave(title, subtitle, category, tags, urlImage, description);
+        onSave(title, subtitle, category, tags, urlImage, description, urlWeb || '', copyright || '');
 
-        setTitle('');  // Limpa o título após salvar
-        setDescription('');  // Limpa o título após salvar
-        setSubtitle('');  // Limpa o título após salvar
-        setCategory('')// Limpa o título após salvar
-        setTags('');  // Limpa o título após salvar
-        setUrlImage('');  // Limpa o título após salvar
-    }
+        // Limpa os campos após salvar
+        setTitle('');
+        setDescription('');
+        setSubtitle('');
+        setCategory('');
+        setTags('');
+        setUrlImage('');
+        setUrlWeb('');
+        setCopyright('');
+    };
 
     const onChangeNomeTarefa = (event) => {
         const { name, value } = event.target;
@@ -79,7 +87,7 @@ const ModalPost = ({ onClose, initialTitle = '', initialSubtitle = '', initialCa
         <div className={styles.modal}>
             <div className={styles.modalContent}>
                 <h3 className={styles.titleModal}>{isEditing ? 'Editar Post' : 'Novo Post'}</h3>
-                <p className={styles.subtitleModal}>Preencha os campos abaixo para criar uma novo post</p>
+                <p className={styles.subtitleModal}>Preencha os campos abaixo para {isEditing ? 'editar' : 'criar'} um novo post</p>
                 <form className={styles.form} onSubmit={submeterForm}>
                     <div className={styles.labMod}>
                         <div className={styles.row}>
@@ -109,7 +117,7 @@ const ModalPost = ({ onClose, initialTitle = '', initialSubtitle = '', initialCa
                         <div className={styles.row}>
                             <div className={styles.column}>
                                 <label className={styles.labelModal}>Categoria</label>
-                                <select className={styles.input} value={category.title} onChange={(e) => setCategory(e.target.value)}>
+                                <select className={styles.input} value={category} onChange={(e) => setCategory(e.target.value)}>
                                     <option value="">Selecione uma categoria...</option>
                                     {categories.map((cat) => (
                                         <option key={cat.id} value={cat.title}>
@@ -164,6 +172,5 @@ const ModalPost = ({ onClose, initialTitle = '', initialSubtitle = '', initialCa
         </div>
     )
 }
-
 
 export { ModalPost }

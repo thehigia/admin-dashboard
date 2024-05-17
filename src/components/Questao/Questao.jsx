@@ -2,31 +2,32 @@ import React, { useEffect, useState } from 'react'
 import { useAppContext } from '../../hooks';
 import { BotaoEdit } from '../Botao/BoataoEdit';
 import { BotaoDelete } from '../Botao/BotaoDelete';
-import ReactPaginate from 'react-paginate';
+import { ModalQuestao } from '../Modal';
 import { Feedback } from '../Feedback';
-import styles from './Questao.module.css'
+
+import ReactPaginate from 'react-paginate';
 import Search from '../../assets/ion_search.svg';
 import Bullet from '../../assets/Bullet.svg';
-import { ModalQuestao } from '../Modal';
+import styles from './Questao.module.css'
 
 const Questao = () => {
-    const { quiz, removerCateg, editCateg, loadingDelete } = useAppContext();
-    const [categories, setCategories] = useState(quiz || []);
+    const { questao, loadingDelete } = useAppContext();
+    const [questaos, setQuestaos] = useState(questao || []);
     const [showModal, setShowModal] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [itemsPerPage, setItemsPerPage] = useState(5);
     const [pageNumber, setPageNumber] = useState(0);
     const pagesVisited = pageNumber * itemsPerPage;
-    const [editingCategory, setEditingCategory] = useState(null);
+    const [editingQuest, setEditingQuest] = useState(null);
 
-    const handleEditClick = (category) => {
-        setEditingCategory(quiz); // Verifique se 'category' é um objeto válido com 'id'
+    const handleEditClick = (questao) => {
+        setEditingQuest(questao); // Verifique se 'questao' é um objeto válido com 'id'
         setShowModal(true);
     };
 
-    const saveEditedCategory = (newTitle) => {
-        editCateg(editingCategory.id, newTitle);
-        setEditingCategory(null);
+    const saveEditedQuests = (newTitle) => {
+        // editCateg(editingCategory.id, newTitle);
+        setEditingQuest(null);
         setShowModal(false);
     };
 
@@ -35,17 +36,17 @@ const Questao = () => {
     };
 
     useEffect(() => {
-        if (quiz) {
-            const validCategories = quiz.filter(cat => cat.title && typeof cat.title === 'string');
-            setCategories(validCategories);
+        if (questao) {
+            const validQuests = questao.filter(ques => ques.title && typeof ques.title === 'string');
+            setQuestaos(validQuests);
         }
-    }, [quiz]);
+    }, [questao]);
 
-    const displayCategories = categories
-        .filter((cat) => cat.title.toLowerCase().includes(searchTerm.toLowerCase()))
+    const displayQuestoes = questaos
+        .filter((ques) => ques.title.toLowerCase().includes(searchTerm.toLowerCase()))
         .slice(pagesVisited, pagesVisited + itemsPerPage);
 
-    const pageCount = Math.ceil(categories.length / itemsPerPage);
+    const pageCount = Math.ceil(questaos.length / itemsPerPage);
 
     const handlePageClick = ({ selected }) => {
         setPageNumber(selected);
@@ -99,22 +100,18 @@ const Questao = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {displayCategories.map((quiz, idx) => (
+                    {displayQuestoes.map((ques, idx) => (
                         <tr key={idx} className={idx % 2 === 0 ? styles.evenRow : styles.oddRow}>
-                            <td>
-                                {quiz.questions.map((question, qIdx) => (
-                                    <span key={qIdx}>{question.title}</span>
-                                ))}
-                            </td>
-                            <td>{quiz.title}</td>
+                            <td title={ques.title}>{ques.title.substring(0, 50)}{ques.title.length > 50 ? '...' : ''}</td>
+                            <td>{ques.quizTitle}</td>
                             <td className={styles.actions}>
                                 <BotaoEdit
                                     // loading={loadingDelete}
-                                    onClick={() => handleEditClick(quiz)}
+                                    onClick={() => handleEditClick(ques)}
                                 />
                                 <BotaoDelete
-                                    // loading={loadingDelete}
-                                    onClick={() => removerCateg(quiz.id)}
+                                // loading={loadingDelete}
+                                // onClick={() => removerCateg(ques.id)}
                                 />
                             </td>
                         </tr>
@@ -136,12 +133,12 @@ const Questao = () => {
             {showModal && (
                 <ModalQuestao
                     onClose={() => {
-                        setEditingCategory(null);
+                        setEditingQuest(null);
                         setShowModal(false);
                     }}
-                    initialTitle={editingCategory ? editingCategory.title : ''}
-                    onSave={saveEditedCategory}
-                    isEditing={Boolean(editingCategory)}
+                    initialTitle={editingQuest ? editingQuest.title : ''}
+                    onSave={saveEditedQuests}
+                    isEditing={Boolean(editingQuest)}
                 />
             )
             }

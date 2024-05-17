@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { useAppContext } from '../../hooks';
 import { BotaoEdit } from '../Botao/BoataoEdit';
 import { BotaoDelete } from '../Botao/BotaoDelete';
 import ReactPaginate from 'react-paginate';
 import { Feedback } from '../Feedback';
-import styles from './Posts.module.css'
+import styles from './Posts.module.css';
 import Search from '../../assets/ion_search.svg';
 import OpenBook from '../../assets/Open-Book.svg';
 import { ModalPost } from '../Modal/ModalPost';
@@ -17,18 +17,28 @@ const Posts = () => {
     const [itemsPerPage, setItemsPerPage] = useState(5);
     const [pageNumber, setPageNumber] = useState(0);
     const pagesVisited = pageNumber * itemsPerPage;
-    const [editingPosts, setEditingPosts] = useState(null);
+    const [editingPost, setEditingPost] = useState(null);
 
-    const handleEditClick = (posts) => {
-        setEditingPosts(posts); // Verifique se 'category' é um objeto válido com 'id'
+    const handleEditClick = (post) => {
+        setEditingPost(post); // Verifique se 'post' é um objeto válido com 'id'
         setShowModal(true);
     };
 
-    const saveEditedPosts = (newTitle, newSubtitle, newCategory, newTags, newUrlImage, newDescription) => {
-        // Edite a categoria com os novos valores
-        editPost(editingPosts.id, newTitle, newSubtitle, newCategory, newTags, newUrlImage, newDescription);
+    const saveEditedPosts = (newTitle, newSubtitle, newCategory, newTags, newUrlImage, newDescription, newUrlWeb, newCopyright) => {
+
+        // Edite o post com os novos valores
+        editPost(editingPost.id, newTitle,
+            newSubtitle,
+            newCategory,
+            newTags,
+            newUrlImage,
+            newDescription,
+            newUrlWeb || '',
+            newCopyright || '',
+        );
+
         // Limpe os campos e feche o modal
-        setEditingPosts(null);
+        setEditingPost(null);
         setShowModal(false);
     };
 
@@ -37,7 +47,6 @@ const Posts = () => {
     };
 
     useEffect(() => {
-        console.log({ posts })
         if (posts) {
             const validPos = posts.filter(pos => pos.title && typeof pos.title === 'string');
             setPos(validPos);
@@ -63,7 +72,7 @@ const Posts = () => {
                         <h1>Post</h1>
                     </div>
                     <div>
-                        <a className={styles.addButton} onClick={handleAddClick}>Adicionar +</a >
+                        <a className={styles.addButton} onClick={handleAddClick}>Adicionar +</a>
                     </div>
                 </div>
                 <div className={styles.controls}>
@@ -110,11 +119,9 @@ const Posts = () => {
                             <td>{post.category}</td>
                             <td className={styles.actions}>
                                 <BotaoEdit
-                                    // loading={loadingDelete}
                                     onClick={() => handleEditClick(post)}
                                 />
                                 <BotaoDelete
-                                    // loading={loadingDelete}
                                     onClick={() => removerPost(post.id)}
                                 />
                             </td>
@@ -132,24 +139,24 @@ const Posts = () => {
                 activeClassName={styles.activePage}
             />
 
-            {/* {loadingDelete && (
-                <Feedback />
-            )} */}
-
             {showModal && (
                 <ModalPost
                     onClose={() => {
-                        setEditingPosts(null);
+                        setEditingPost(null);
                         setShowModal(false);
                     }}
-                    initialTitle={editingPosts ? editingPosts.title : ''}
-                    initialSubtitle={editingPosts ? editingPosts.subtitle : ''}
-                    initialCategory={editingPosts ? editingPosts.category : ''}
-                    initialTags={editingPosts ? editingPosts.tags : ''}
-                    initialUrlImage={editingPosts ? editingPosts.urlImage : ''}
-                    initialDescription={editingPosts ? editingPosts.description : ''}
-                    onSave={saveEditedPosts}
-                    isEditing={Boolean(editingPosts)}
+                    initialTitle={editingPost ? editingPost.title : ''}
+                    initialSubtitle={editingPost ? editingPost.subtitle : ''}
+                    initialCategory={editingPost ? editingPost.category : ''}
+                    initialTags={editingPost ? editingPost.tags : ''}
+                    initialUrlImage={editingPost ? editingPost.urlImage : ''}
+                    initialDescription={editingPost ? editingPost.description : ''}
+                    initialUrlWeb={editingPost ? editingPost.urlWeb : ''}
+                    initialCopyright={editingPost ? editingPost.copyright : ''}
+                    onSave={(newTitle, newSubtitle, newCategory, newTags, newUrlImage, newDescription, newUrlWeb, newCopyright) => saveEditedPosts(
+                        newTitle, newSubtitle, newCategory, newTags, newUrlImage, newDescription, newUrlWeb, newCopyright
+                    )}
+                    isEditing={Boolean(editingPost)}
                 />
             )}
         </div>

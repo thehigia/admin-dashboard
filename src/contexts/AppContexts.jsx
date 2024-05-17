@@ -8,6 +8,7 @@ export const AppContextProvider = (props) => {
     const [category, setCategory] = useState([]);
     const [posts, setPosts] = useState([]);
     const [quiz, setQuiz] = useState([]);
+    const [questao, setQuestao] = useState([]);
     const [loadingDelete, setLoadingDelete] = useState(false);
     // const [loadingEditar, setLoadingEditar] = useState(null);
     // const [loadingRemover, setLoadingRemover] = useState(null);
@@ -40,6 +41,17 @@ export const AppContextProvider = (props) => {
             const { data = [] } = await api.get('/quiz/all');
 
             setQuiz([...data])
+
+        } catch (error) {
+            console.error('Erro ao carregar registros:', error);
+        }
+    };
+
+    const getQuestao = async () => {
+        try {
+            const { data = [] } = await api.get('/quiz/question/all');
+
+            setQuestao([...data])
 
         } catch (error) {
             console.error('Erro ao carregar registros:', error);
@@ -154,7 +166,7 @@ export const AppContextProvider = (props) => {
 
     const editPost = async (idPost, title, subtitle, category, tags, urlImage, description, urlWeb = '', copyright = '') => {
         try {
-            const { data: posts } = await api.put(`/post/${idPost}`, {
+            const { data: updatedPost } = await api.put(`/post/${idPost}`, {
                 title,
                 subtitle,
                 category,
@@ -166,41 +178,26 @@ export const AppContextProvider = (props) => {
             });
 
             setPosts(estadoAtual => {
-                const postAtualizadas = estadoAtual.map(post => {
-                    if (post.id === idPost) {
-                        return {
-                            ...post,
-                            title: title || post.title,
-                            subtitle: subtitle || post.subtitle,
-                            category: category || post.category,
-                            urlImage: urlImage || post.urlImage,
-                            tags: tags || post.tags,
-                            description: description || post.description,
-                            urlWeb: urlWeb || post.urlWeb,
-                            copyright: copyright || post.copyright // Certifique-se que 'nome' é a propriedade correta
-                        };
-                    } else {
-                        return post;
-                    }
-                });
-
-                return [
-                    ...postAtualizadas,
-                ];
+                return estadoAtual.map(post =>
+                    post.id === idPost ? { ...post, ...updatedPost } : post
+                );
             });
 
+            // Atualiza a lista de posts após a edição
             getPost();
 
         } catch (error) {
-            console.error('Erro ao atualizar categoria:', error);
+            console.error('Erro ao atualizar o post:', error);
             // Trate o erro conforme necessário
         }
     }
+
 
     useEffect(() => {
         getCateg();
         getPost();
         getQuiz();
+        getQuestao();
     }, [])
 
     return (
@@ -208,9 +205,7 @@ export const AppContextProvider = (props) => {
             category,
             posts,
             quiz,
-            getPost,
-            getCateg,
-            getQuiz,
+            questao,
             addCateg,
             addPost,
             removerCateg,
