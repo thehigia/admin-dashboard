@@ -1,51 +1,74 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { useAppContext } from '../../hooks';
 import { BotaoEdit } from '../Botao/BoataoEdit';
 import { BotaoDelete } from '../Botao/BotaoDelete';
 import ReactPaginate from 'react-paginate';
 import { Feedback } from '../Feedback';
-import styles from './Quiz.module.css'
+import styles from './Quiz.module.css';
 import Search from '../../assets/ion_search.svg';
 import TaskList from '../../assets/Task.svg';
 import { ModalQuiz } from '../Modal';
 
 const Quiz = () => {
-    const { quiz, removerCateg, editCateg, loadingDelete } = useAppContext();
-    const [categories, setCategories] = useState(quiz || []);
+    const { quiz, removerQuiz, editQuiz, addQuiz, loadingDelete } = useAppContext();
+    const [qui, setQui] = useState(quiz || []);
     const [showModal, setShowModal] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [itemsPerPage, setItemsPerPage] = useState(5);
     const [pageNumber, setPageNumber] = useState(0);
     const pagesVisited = pageNumber * itemsPerPage;
-    const [editingCategory, setEditingCategory] = useState(null);
+    const [editingQuiz, setEditingQuiz] = useState(null);
 
-    const handleEditClick = (category) => {
-        setEditingCategory(quiz); // Verifique se 'category' é um objeto válido com 'id'
+    const handleEditClick = (quiz) => {
+        setEditingQuiz(quiz);
         setShowModal(true);
     };
 
-    const saveEditedCategory = (newTitle) => {
-        editCateg(editingCategory.id, newTitle);
-        setEditingCategory(null);
+    const saveEditedQuiz = (quizData) => {
+        if (editingQuiz) {
+            editQuiz(
+                editingQuiz.id,
+                quizData.title,
+                quizData.description,
+                quizData.isHighlighted,
+                quizData.sequence,
+                quizData.backgroundImageUrl,
+                quizData.category
+            );
+        } else {
+            addQuiz(
+                quizData.title,
+                quizData.description,
+                quizData.isHighlighted,
+                quizData.sequence,
+                quizData.backgroundImageUrl,
+                quizData.category
+            );
+        }
+
+        setEditingQuiz(null);
         setShowModal(false);
     };
 
+
     const handleAddClick = () => {
+        setEditingQuiz(null);
         setShowModal(true);
     };
 
     useEffect(() => {
+        console.log({ quiz })
         if (quiz) {
-            const validCategories = quiz.filter(cat => cat.title && typeof cat.title === 'string');
-            setCategories(validCategories);
+            const validCategories = quiz.filter(qui => qui.title && typeof qui.title === 'string');
+            setQui(validCategories);
         }
     }, [quiz]);
 
-    const displayCategories = categories
+    const displayCategories = qui
         .filter((cat) => cat.title.toLowerCase().includes(searchTerm.toLowerCase()))
         .slice(pagesVisited, pagesVisited + itemsPerPage);
 
-    const pageCount = Math.ceil(categories.length / itemsPerPage);
+    const pageCount = Math.ceil(qui.length / itemsPerPage);
 
     const handlePageClick = ({ selected }) => {
         setPageNumber(selected);
@@ -60,7 +83,7 @@ const Quiz = () => {
                         <h1>Quiz</h1>
                     </div>
                     <div>
-                        <a className={styles.addButton} onClick={handleAddClick}>Adicionar +</a >
+                        <a className={styles.addButton} onClick={handleAddClick}>Adicionar +</a>
                     </div>
                 </div>
                 <div className={styles.controls}>
@@ -72,7 +95,7 @@ const Quiz = () => {
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
-                        <img className={styles.searchIcon} src={Search} />
+                        <img className={styles.searchIcon} src={Search} alt="Search Icon" />
                     </div>
                     <div className={styles.paginationControls}>
                         <span className={styles.span}>Apresentar</span>
@@ -106,14 +129,8 @@ const Quiz = () => {
                             <td>{quiz.category}</td>
                             <td>{quiz.sequence}</td>
                             <td className={styles.actions}>
-                                <BotaoEdit
-                                    // loading={loadingDelete}
-                                    onClick={() => handleEditClick(quiz)}
-                                />
-                                <BotaoDelete
-                                    // loading={loadingDelete}
-                                    onClick={() => removerCateg(quiz.id)}
-                                />
+                                <BotaoEdit onClick={() => handleEditClick(quiz)} />
+                                <BotaoDelete onClick={() => removerQuiz(quiz.id)} />
                             </td>
                         </tr>
                     ))}
@@ -128,24 +145,22 @@ const Quiz = () => {
                 containerClassName={styles.pagination}
                 activeClassName={styles.activePage}
             />
-            {loadingDelete && (
-                <Feedback />
-            )}
+
             {showModal && (
                 <ModalQuiz
-                    onClose={() => {
-                        setEditingCategory(null);
-                        setShowModal(false);
-                    }}
-                    initialTitle={editingCategory ? editingCategory.title : ''}
-                    onSave={saveEditedCategory}
-                    isEditing={Boolean(editingCategory)}
+                    onClose={() => setShowModal(false)}
+                    onSave={saveEditedQuiz}
+                    isEditing={!!editingQuiz}
+                    initialTitle={editingQuiz?.title || ''}
+                    initialSequence={editingQuiz?.sequence || ''}
+                    initialCategory={editingQuiz?.category || ''}
+                    initialDescription={editingQuiz?.description || ''}
+                    initialIsHighlighted={editingQuiz?.isHighlighted || false}
+                    initialBackgroundImageUrl={editingQuiz?.backgroundImageUrl || ''}
                 />
-            )
-            }
-
+            )}
         </div>
     );
 }
 
-export { Quiz }
+export { Quiz };

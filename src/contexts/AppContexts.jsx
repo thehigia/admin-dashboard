@@ -94,6 +94,25 @@ export const AppContextProvider = (props) => {
         getPost();
     }
 
+    const addQuiz = async (title, description, isHighlighted, sequence, backgroundImageUrl, category) => {
+        const parsedSequence = parseInt(sequence, 10);
+        const { data: qui } = await api.post('/quiz/create', {
+            title,
+            description,
+            sequence: isNaN(parsedSequence) ? 225 : parsedSequence,  // Garantindo que sequence é um número
+            isHighlighted: Boolean(isHighlighted),  // Garantindo que isHighlighted é um booleano
+            backgroundImageUrl,
+            category,
+        });
+        setQuiz(estadoAtual => [
+            ...estadoAtual,
+            qui,
+        ]);
+
+        getQuiz();
+    };
+
+
     const removerCateg = async (idCateg) => {
         setLoadingDelete(true);
         try {
@@ -119,7 +138,7 @@ export const AppContextProvider = (props) => {
         setLoadingDelete(true);
         try {
             await api.delete(`/post/${idPost}`);
-            setCategory(estadoAtual => {
+            setPosts(estadoAtual => {
                 const postAtualizadas = estadoAtual.filter(post => post.id !== idPost);
 
                 return [
@@ -128,6 +147,29 @@ export const AppContextProvider = (props) => {
             });
 
             getPost();
+
+        } catch (error) {
+            setTimeout(() => {
+                setLoadingDelete(false);
+            }, 2000);
+            console.log('Essa categoria não pode ser removida!', error);
+            // Trate o erro como necessário
+        }
+    };
+
+    const removerQuiz = async (idQuiz) => {
+        setLoadingDelete(true);
+        try {
+            await api.delete(`/quiz/delete/${idQuiz}`);
+            setQuiz(estadoAtual => {
+                const quizAtualizadas = estadoAtual.filter(quiz => quiz.id !== idQuiz);
+
+                return [
+                    ...quizAtualizadas,
+                ];
+            });
+
+            getQuiz();
 
         } catch (error) {
             setTimeout(() => {
@@ -192,6 +234,33 @@ export const AppContextProvider = (props) => {
         }
     }
 
+    const editQuiz = async (idQuiz, title, sequence, questions, isHighlighted, createdAt, backgroundImageUrl) => {
+        try {
+            const { data: updatedQuiz } = await api.put(`/quiz/updateName/${idQuiz}`, {
+                title,
+                sequence,
+                category,
+                questions,
+                isHighlighted,
+                createdAt,
+                backgroundImageUrl,
+            });
+
+            setQuiz(estadoAtual => {
+                return estadoAtual.map(quiz =>
+                    quiz.id === idQuiz ? { ...quiz, ...updatedQuiz } : quiz
+                );
+            });
+
+            // Atualiza a lista de posts após a edição
+            getQuiz();
+
+        } catch (error) {
+            console.error('Erro ao atualizar o post:', error);
+            // Trate o erro conforme necessário
+        }
+    }
+
 
     useEffect(() => {
         getCateg();
@@ -208,11 +277,14 @@ export const AppContextProvider = (props) => {
             questao,
             addCateg,
             addPost,
+            addQuiz,
             removerCateg,
             removerPost,
+            removerQuiz,
             editCateg,
             editPost,
-            loadingDelete
+            editQuiz,
+            // loadingDelete
         }}>
             {children}
         </AppContext.Provider>

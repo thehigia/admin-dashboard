@@ -116,8 +116,8 @@ const ModalPost = ({ onClose, initialTitle = '', initialSubtitle = '', initialCa
                         </div>
                         <div className={styles.row}>
                             <div className={styles.column}>
-                                <label className={styles.labelModal}>Categoria</label>
-                                <select className={styles.input} value={category} onChange={(e) => setCategory(e.target.value)}>
+                                <label className={`${styles.labelModal} ${isEditing ? styles.labelDisabled : ""}`}>Categoria</label>
+                                <select className={styles.input} value={category} disabled={isEditing} onChange={(e) => setCategory(e.target.value)}>
                                     <option value="">Selecione uma categoria...</option>
                                     {categories.map((cat) => (
                                         <option key={cat.id} value={cat.title}>
@@ -127,13 +127,14 @@ const ModalPost = ({ onClose, initialTitle = '', initialSubtitle = '', initialCa
                                 </select>
                             </div>
                             <div className={styles.column}>
-                                <label className={styles.labelModal}>URL da imagem de capa</label>
+                                <label className={`${styles.labelModal} ${isEditing ? styles.labelDisabled : ""}`}>URL da imagem de capa</label>
                                 <input
                                     className={styles.input}
                                     type="text"
                                     placeholder='Cole a URL aqui...'
                                     value={urlImage}
                                     name="urlImage"
+                                    disabled={isEditing}
                                     onChange={onChangeNomeTarefa}
                                 />
                             </div>
@@ -141,13 +142,14 @@ const ModalPost = ({ onClose, initialTitle = '', initialSubtitle = '', initialCa
 
                         <div className={styles.labMod}>
                             <div className={styles.row}>
-                                <label className={styles.labelModal}>Tag</label>
+                                <label className={`${styles.labelModal} ${isEditing ? styles.labelDisabled : ""}`}>Tag</label>
                                 <input
                                     className={styles.input}
                                     type="text"
                                     placeholder='Escreva as tags separados por vírgula aqui...'
                                     value={tags}
                                     name="tags"
+                                    disabled={isEditing}
                                     onChange={onChangeNomeTarefa}
                                 />
                             </div>

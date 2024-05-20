@@ -130,3 +130,7 @@
 .column:last-child {
   margin-right: 0; /* remove the margin from the last column */
 }
+
+.labelDisabled {
+  color: #ccc; /* cor cinza desabilitada */
+}

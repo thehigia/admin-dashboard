@@ -126,9 +126,9 @@ const Categoria = () => {
                 containerClassName={styles.pagination}
                 activeClassName={styles.activePage}
             />
-            {loadingDelete && (
+            {/* {loadingDelete && (
                 <Feedback />
-            )}
+            )} */}
             {showModal && (
                 <ModalCategory
                     onClose={() => {
