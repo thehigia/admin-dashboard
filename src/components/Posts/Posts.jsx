@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useAppContext } from '../../hooks';
+import { Link } from 'react-router-dom';
+import ReactPaginate from 'react-paginate';
+
 import { BotaoEdit } from '../Botao/BoataoEdit';
 import { BotaoDelete } from '../Botao/BotaoDelete';
-import ReactPaginate from 'react-paginate';
-import { Feedback } from '../Feedback';
-import styles from './Posts.module.css';
-import Search from '../../assets/ion_search.svg';
-import OpenBook from '../../assets/Open-Book.svg';
 import { ModalPost } from '../Modal/ModalPost';
-import { Link } from 'react-router-dom';
+import { Feedback } from '../Feedback';
+
+import OpenBook from '../../assets/Open-Book.svg';
+import Search from '../../assets/ion_search.svg';
+import styles from './Posts.module.css';
 
 const Posts = () => {
     const { posts, removerPost, editPost, loadingDelete } = useAppContext();

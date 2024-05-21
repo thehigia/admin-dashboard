@@ -111,6 +111,22 @@ export const AppContextProvider = (props) => {
         getQuiz();
     };
 
+    const addQuestao = async ({ title, description, isHighlighted, sequence, backgroundImageUrl, category }) => {
+        const { data: ques } = await api.post('/quiz/question/create', {
+            title,
+            description,
+            sequence: parseInt(sequence),
+            isHighlighted: Boolean(isHighlighted),
+            backgroundImageUrl,
+            category,
+        });
+        setQuestao(estadoAtual => [
+            ...estadoAtual,
+            ques,
+        ]);
+
+        getQuestao();
+    };
 
     const removerCateg = async (idCateg) => {
         setLoadingDelete(true);
