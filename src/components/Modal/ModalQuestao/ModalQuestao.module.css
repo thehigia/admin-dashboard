@@ -55,6 +55,7 @@
   color: #fff;
   padding: 0.5rem 1rem;
   border-radius: 8px;
+  text-decoration: none;
 }
 
 .btnSave {
@@ -62,6 +63,7 @@
   color: #fff;
   padding: 0.5rem 1.5rem;
   border-radius: 8px;
+  text-decoration: none;
 }
 
 .form {
@@ -129,4 +131,8 @@
 
 .column:last-child {
   margin-right: 0; /* remove the margin from the last column */
+}
+
+.labelDisabled {
+  color: #ccc; /* cor cinza desabilitada */
 }

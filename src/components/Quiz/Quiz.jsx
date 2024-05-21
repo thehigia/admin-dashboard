@@ -48,7 +48,6 @@ const Quiz = () => {
     };
 
     useEffect(() => {
-        console.log({ quiz })
         if (quiz) {
             const validCategories = quiz.filter(qui => qui.title && typeof qui.title === 'string');
             setQui(validCategories);

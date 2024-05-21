@@ -1,42 +1,64 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from './ModalQuestao.module.css';
 import { useAppContext } from "../../../hooks";
+import { Link } from "react-router-dom";
 
-const ModalQuestao = ({ onClose, initialTitle = '', onSave, isEditing = false }) => {
-    const { addCateg } = useAppContext();
-    const [description, setDescription] = useState();
+const ModalQuestao = ({ onClose, initialTitle = '', initialAlternatives = [], initialCorrectIndex = '', initialExplanation = '', initialSequence = '', initialQuiz = '', onSave, isEditing = false }) => {
+    const { addQuestao, quiz: quizes } = useAppContext();
+    const [quiz, setQuiz] = useState(initialQuiz);
     const [title, setTitle] = useState(initialTitle);
+    const [alternatives, setAlternatives] = useState(initialAlternatives);
+    const [correctIndex, setCorrectIndex] = useState(initialCorrectIndex);
+    const [explanation, setExplanation] = useState(initialExplanation);
+    const [sequence, setSequence] = useState(initialSequence);
 
     const handleSave = () => {
-        if (!title.trim()) {
-            return;  // Garante que não salvamos títulos vazios ou apenas com espaços.
-        }
-
+        const payload = { title, quiz, alternatives, sequence, correctIndex, explanation };
+        console.log("Salvando questão com payload:", payload);
         if (isEditing) {
-            // Se está editando, chama função de editar
-            onSave(title);
+            onSave(payload);
         } else {
-            // Se está adicionando, chama função de adicionar
-            addCateg(title);
+            addQuestao(payload);
         }
 
-        setTitle('');  // Limpa o título após salvar
-        onClose();  // Fecha o modal
+        setTitle('');
+        setAlternatives([]);
+        setCorrectIndex(false);
+        setExplanation('');
+        setQuiz('');
+        setSequence('');
+        onClose();
     };
-
-    const onChangeNomeTarefa = (event) => {
-        setTitle(event.currentTarget.value)
-    }
 
     const submeterForm = (event) => {
         event.preventDefault();
+        handleSave();
+    }
 
-        if (!title) {
-            return;
+    const onChangeNomeTarefa = (event) => {
+        const { name, value } = event.target;
+        switch (name) {
+            case 'title':
+                setTitle(value);
+                break;
+            case 'alternatives':
+                setAlternatives(value.split(',').map(alt => alt.trim()));
+                break;
+            case 'correctIndex':
+                setCorrectIndex(value);
+                break;
+            case 'quiz':
+                setQuiz(value);
+                break;
+            case 'explanation':
+                setExplanation(value);
+                break;
+            case 'sequence':
+                setSequence(value);
+                break;
+            default:
+                break;
         }
-        onSave(title)
-
-        setTitle('')
     }
 
     return (
@@ -54,18 +76,42 @@ const ModalQuestao = ({ onClose, initialTitle = '', onSave, isEditing = false })
                                     type="text"
                                     placeholder='Escreva o título aqui...'
                                     value={title}
+                                    name="title"
+                                    onChange={onChangeNomeTarefa}
+                                />
+                            </div>
+                            <div className={styles.column01}>
+                                <label className={
+                                    `${styles.labelModal} 
+                                    ${isEditing ? styles.labelDisabled : ""}`
+                                }>Sequência</label>
+                                <input
+                                    className={styles.input}
+                                    type="number"
+                                    placeholder='Digite a sequência aqui...'
+                                    value={sequence}
+                                    name="sequence"
+                                    disabled={isEditing}
                                     onChange={onChangeNomeTarefa}
                                 />
                             </div>
                             <div className={styles.column02}>
-                                <label className={styles.labelModal}>Quiz</label>
-                                <select className={styles.input} >
-                                    <option value="">Selecione um quiz...</option>
-                                    {/* {onSave.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.title}
-              </option>
-            ))} */}
+                                <label className={
+                                    `${styles.labelModal} 
+                                    ${isEditing ? styles.labelDisabled : ""}`
+                                }>Quiz</label>
+                                <select
+                                    className={styles.input}
+                                    value={quiz}
+                                    disabled={isEditing}
+                                    onChange={(e) => setQuiz(e.target.value)}
+                                >
+                                    <option value="">Selecione uma categoria...</option>
+                                    {quizes.map((qui) => (
+                                        <option key={qui.id} value={qui.title}>
+                                            {qui.title}
+                                        </option>
+                                    ))}
                                 </select>
                             </div>
                         </div>
@@ -76,35 +122,42 @@ const ModalQuestao = ({ onClose, initialTitle = '', onSave, isEditing = false })
                                     className={styles.input}
                                     type="text"
                                     placeholder='Separar por vírgulas (Exemplo: A - Lorem lipsum dolor, B - Sit amet dolor, C - Dolor sit amet, D - Lorem lipsum'
-                                // value={subtitle}
-                                // onChange={onChangeNomeTarefa}
+                                    value={alternatives}
+                                    name="alternatives"
+                                    onChange={onChangeNomeTarefa}
                                 />
                             </div>
                             <div className={styles.column02}>
                                 <label className={styles.labelModal}>Índice da alternativa</label>
                                 <input
                                     className={styles.input}
-                                    type="text"
+                                    type="number"
                                     placeholder='Escreva o título aqui...'
-                                // value={subtitle}
-                                // onChange={onChangeNomeTarefa}
+                                    value={correctIndex}
+                                    name="correctIndex"
+                                    onChange={onChangeNomeTarefa}
                                 />
                             </div>
                         </div>
                         <div className={styles.labMod}>
-                            <label className={styles.labelModal}>Justificativa</label>
+                            <label className={
+                                `${styles.labelModal} 
+                                    ${isEditing ? styles.labelDisabled : ""}`
+                            }>Justificativa</label>
                             <textarea
                                 className={styles.textArea}
                                 placeholder='Escreva a justificativa aqui...'
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
+                                value={explanation}
+                                name="explanation"
+                                disabled={isEditing}
+                                onChange={onChangeNomeTarefa}
                             />
                         </div>
                     </div>
 
                     <div className={styles.modalButtons}>
-                        <a className={styles.btnCancel} onClick={onClose}>Cancelar</a>
-                        <a className={styles.btnSave} onClick={handleSave}>Salvar</a>
+                        <Link className={styles.btnCancel} onClick={onClose}>Cancelar</Link>
+                        <Link className={styles.btnSave} onClick={handleSave}>Salvar</Link>
                     </div>
                 </form>
             </div>

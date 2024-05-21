@@ -111,14 +111,14 @@ export const AppContextProvider = (props) => {
         getQuiz();
     };
 
-    const addQuestao = async ({ title, description, isHighlighted, sequence, backgroundImageUrl, category }) => {
+    const addQuestao = async ({ title, explanation, sequence, correctIndex, alternatives, quiz }) => {
         const { data: ques } = await api.post('/quiz/question/create', {
             title,
-            description,
+            explanation,
             sequence: parseInt(sequence),
-            isHighlighted: Boolean(isHighlighted),
-            backgroundImageUrl,
-            category,
+            correctIndex: parseInt(correctIndex),
+            alternatives,
+            quiz,
         });
         setQuestao(estadoAtual => [
             ...estadoAtual,
@@ -189,6 +189,29 @@ export const AppContextProvider = (props) => {
         } catch (error) {
             setTimeout(() => {
                 setLoadingDelete(false);
+            }, 2000);
+            console.log('Essa categoria não pode ser removida!', error);
+            // Trate o erro como necessário
+        }
+    };
+
+    const removerQuestao = async (idQuestao) => {
+        // setLoadingDelete(true);
+        try {
+            await api.delete(`/quiz/question/delete${idQuestao}`);
+            setQuestao(estadoAtual => {
+                const questaoAtualizadas = estadoAtual.filter(quest => quest.id !== idQuestao);
+
+                return [
+                    ...questaoAtualizadas,
+                ];
+            });
+
+            getQuestao();
+
+        } catch (error) {
+            setTimeout(() => {
+                // setLoadingDelete(false);
             }, 2000);
             console.log('Essa categoria não pode ser removida!', error);
             // Trate o erro como necessário
@@ -276,6 +299,31 @@ export const AppContextProvider = (props) => {
         }
     }
 
+    const editQuestao = async (idQuestao, title, explanation, sequence, correctIndex, alternatives, quiz) => {
+        try {
+            const { data: updatedQuestao } = await api.post(`/quiz/question/update/${idQuestao}`, {
+                title,
+                explanation,
+                sequence: parseInt(sequence),
+                correctIndex: parseInt(correctIndex),
+                alternatives,
+                quiz,
+            });
+
+            setQuestao(estadoAtual => {
+                return estadoAtual.map(ques =>
+                    ques.id === idQuestao ? { ...ques, ...updatedQuestao } : ques
+                );
+            });
+
+            getQuestao();
+        } catch (error) {
+            console.error('Erro ao atualizar o post:', error);
+            // Trate o erro conforme necessário
+        }
+    };
+
+
 
     useEffect(() => {
         getCateg();
@@ -293,12 +341,15 @@ export const AppContextProvider = (props) => {
             addCateg,
             addPost,
             addQuiz,
+            addQuestao,
             removerCateg,
             removerPost,
             removerQuiz,
+            removerQuestao,
             editCateg,
             editPost,
             editQuiz,
+            editQuestao,
             // loadingDelete
         }}>
             {children}

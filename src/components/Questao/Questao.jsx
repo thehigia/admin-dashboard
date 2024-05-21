@@ -9,9 +9,10 @@ import ReactPaginate from 'react-paginate';
 import Search from '../../assets/ion_search.svg';
 import Bullet from '../../assets/Bullet.svg';
 import styles from './Questao.module.css'
+import { Link } from 'react-router-dom';
 
 const Questao = () => {
-    const { questao, loadingDelete } = useAppContext();
+    const { questao, removerQuestao, editQuestao, loadingDelete } = useAppContext();
     const [questaos, setQuestaos] = useState(questao || []);
     const [showModal, setShowModal] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
@@ -25,22 +26,36 @@ const Questao = () => {
         setShowModal(true);
     };
 
-    const saveEditedQuests = (newTitle) => {
-        // editCateg(editingCategory.id, newTitle);
+    const saveEditedQuests = (quizData) => {
+        editQuestao(
+            editingQuest.id,
+            quizData.title,
+            quizData.explanation,
+            quizData.sequence,
+            quizData.correctIndex,
+            quizData.alternatives,
+            quizData.quizTitle
+        );
+
         setEditingQuest(null);
         setShowModal(false);
     };
 
     const handleAddClick = () => {
+        setEditingQuest(null);
         setShowModal(true);
     };
-
     useEffect(() => {
+        console.log({ questao })
         if (questao) {
             const validQuests = questao.filter(ques => ques.title && typeof ques.title === 'string');
             setQuestaos(validQuests);
         }
     }, [questao]);
+
+    useEffect(() => {
+        console.log("editingQuest:", editingQuest);
+    }, [editingQuest]);
 
     const displayQuestoes = questaos
         .filter((ques) => ques.title.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -61,7 +76,12 @@ const Questao = () => {
                         <h1>Questão</h1>
                     </div>
                     <div>
-                        <a className={styles.addButton} onClick={handleAddClick}>Adicionar +</a >
+                        <Link
+                            className={styles.addButton}
+                            onClick={handleAddClick}
+                        >
+                            Adicionar +
+                        </Link >
                     </div>
                 </div>
                 <div className={styles.controls}>
@@ -110,8 +130,8 @@ const Questao = () => {
                                     onClick={() => handleEditClick(ques)}
                                 />
                                 <BotaoDelete
-                                // loading={loadingDelete}
-                                // onClick={() => removerCateg(ques.id)}
+                                    // loading={loadingDelete}
+                                    onClick={() => removerQuestao(ques.id)}
                                 />
                             </td>
                         </tr>
@@ -132,13 +152,15 @@ const Questao = () => {
             )}
             {showModal && (
                 <ModalQuestao
-                    onClose={() => {
-                        setEditingQuest(null);
-                        setShowModal(false);
-                    }}
-                    initialTitle={editingQuest ? editingQuest.title : ''}
+                    onClose={() => setShowModal(false)}
                     onSave={saveEditedQuests}
-                    isEditing={Boolean(editingQuest)}
+                    isEditing={!!editingQuest}
+                    initialTitle={editingQuest?.title || ''}
+                    initialSequence={editingQuest?.sequence || ''}
+                    initialAlternatives={editingQuest?.alternatives || ''}
+                    initialQuiz={editingQuest?.quizTitle || ''}
+                    initialExplanation={editingQuest?.explanation || ''}
+                    initialCorrectIndex={editingQuest?.correctIndex || ''}
                 />
             )
             }
