@@ -1,6 +1,8 @@
 import { useState } from "react";
-import styles from './ModalPost.module.css';
 import { useAppContext } from "../../../hooks";
+import { Link } from "react-router-dom";
+
+import styles from './ModalPost.module.css';
 
 const ModalPost = ({ onClose, initialTitle = '', initialSubtitle = '', initialCategory = '', initialTags = '', initialUrlImage = '', initialDescription = '', initialUrlWeb = '', initialCopyright = '', onSave, isEditing = false }) => {
     const { addPost, category: categories } = useAppContext();
@@ -166,8 +168,8 @@ const ModalPost = ({ onClose, initialTitle = '', initialSubtitle = '', initialCa
                     </div>
 
                     <div className={styles.modalButtons}>
-                        <a className={styles.btnCancel} onClick={onClose}>Cancelar</a>
-                        <a className={styles.btnSave} onClick={handleSave}>Salvar</a>
+                        <Link className={styles.btnCancel} onClick={onClose}>Cancelar</Link>
+                        <Link className={styles.btnSave} onClick={handleSave}>Salvar</Link>
                     </div>
                 </form>
             </div>

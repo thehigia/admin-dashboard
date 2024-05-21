@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useAppContext } from '../../hooks';
+import { Link } from 'react-router-dom';
+import ReactPaginate from 'react-paginate';
+
 import { BotaoEdit } from '../Botao/BoataoEdit';
 import { BotaoDelete } from '../Botao/BotaoDelete';
-import ReactPaginate from 'react-paginate';
-import { Feedback } from '../Feedback';
-import styles from './Quiz.module.css';
-import Search from '../../assets/ion_search.svg';
-import TaskList from '../../assets/Task.svg';
 import { ModalQuiz } from '../Modal';
+import { Feedback } from '../Feedback';
+
+import styles from './Quiz.module.css';
+import TaskList from '../../assets/Task.svg';
+import Search from '../../assets/ion_search.svg';
 
 const Quiz = () => {
-    const { quiz, removerQuiz, editQuiz, addQuiz, loadingDelete } = useAppContext();
+    const { quiz, removerQuiz, editQuiz, loadingDelete } = useAppContext();
     const [qui, setQui] = useState(quiz || []);
     const [showModal, setShowModal] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
@@ -25,31 +28,19 @@ const Quiz = () => {
     };
 
     const saveEditedQuiz = (quizData) => {
-        if (editingQuiz) {
-            editQuiz(
-                editingQuiz.id,
-                quizData.title,
-                quizData.description,
-                quizData.isHighlighted,
-                quizData.sequence,
-                quizData.backgroundImageUrl,
-                quizData.category
-            );
-        } else {
-            addQuiz(
-                quizData.title,
-                quizData.description,
-                quizData.isHighlighted,
-                quizData.sequence,
-                quizData.backgroundImageUrl,
-                quizData.category
-            );
-        }
+        editQuiz(
+            editingQuiz.id,
+            quizData.title,
+            quizData.description,
+            quizData.isHighlighted,
+            quizData.sequence,
+            quizData.backgroundImageUrl,
+            quizData.category
+        );
 
         setEditingQuiz(null);
         setShowModal(false);
     };
-
 
     const handleAddClick = () => {
         setEditingQuiz(null);
@@ -83,7 +74,12 @@ const Quiz = () => {
                         <h1>Quiz</h1>
                     </div>
                     <div>
-                        <a className={styles.addButton} onClick={handleAddClick}>Adicionar +</a>
+                        <Link
+                            className={styles.addButton}
+                            onClick={handleAddClick}
+                        >
+                            Adicionar +
+                        </Link>
                     </div>
                 </div>
                 <div className={styles.controls}>

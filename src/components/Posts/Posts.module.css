@@ -36,7 +36,13 @@
   color: white;
   border-radius: 10px;
   cursor: pointer;
+  text-decoration: none;
 }
+
+.addButton:hover {
+  background: #0a898b;
+}
+
 .searchArea {
   position: relative;
   display: flex;

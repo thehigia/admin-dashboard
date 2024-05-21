@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styles from './ModalCategory.module.css';
 import { useAppContext } from "../../../hooks";
+import { Link } from "react-router-dom";
 
 const ModalCategory = ({ onClose, initialTitle = '', onSave, isEditing = false }) => {
     const { addCateg } = useAppContext();
@@ -55,8 +56,8 @@ const ModalCategory = ({ onClose, initialTitle = '', onSave, isEditing = false }
                         />
                     </div>
                     <div className={styles.modalButtons}>
-                        <a className={styles.btnCancel} onClick={onClose}>Cancelar</a>
-                        <a className={styles.btnSave} onClick={handleSave}>Salvar</a>
+                        <Link className={styles.btnCancel} onClick={onClose}>Cancelar</Link>
+                        <Link className={styles.btnSave} onClick={handleSave}>Salvar</Link>
                     </div>
                 </form>
             </div>

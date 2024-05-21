@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useAppContext } from '../../hooks';
-import styles from './Categories.module.css';
 import ReactPaginate from 'react-paginate';
-import AddLayer from '../../assets/Add-Layer.svg';
 
-import Search from '../../assets/ion_search.svg';
 import { ModalCategory } from '../Modal';
-import { Feedback } from '../Feedback';
 import { BotaoDelete } from '../Botao/BotaoDelete';
 import { BotaoEdit } from '../Botao/BoataoEdit';
+import { Feedback } from '../Feedback';
 
+import Search from '../../assets/ion_search.svg';
+import AddLayer from '../../assets/Add-Layer.svg';
+import styles from './Categories.module.css';
+import { Link } from 'react-router-dom';
 
 const Categoria = () => {
     const { category, removerCateg, editCateg, loadingDelete } = useAppContext();
@@ -62,7 +63,12 @@ const Categoria = () => {
                         <h1>Categoria</h1>
                     </div>
                     <div>
-                        <a className={styles.addButton} onClick={handleAddClick}>Adicionar +</a >
+                        <Link
+                            className={styles.addButton}
+                            onClick={handleAddClick}
+                        >
+                            Adicionar +
+                        </Link >
                     </div>
                 </div>
                 <div className={styles.controls}>

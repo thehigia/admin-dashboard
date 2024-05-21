@@ -94,13 +94,12 @@ export const AppContextProvider = (props) => {
         getPost();
     }
 
-    const addQuiz = async (title, description, isHighlighted, sequence, backgroundImageUrl, category) => {
-        const parsedSequence = parseInt(sequence, 10);
+    const addQuiz = async ({ title, description, isHighlighted, sequence, backgroundImageUrl, category }) => {
         const { data: qui } = await api.post('/quiz/create', {
             title,
             description,
-            sequence: isNaN(parsedSequence) ? 225 : parsedSequence,  // Garantindo que sequence é um número
-            isHighlighted: Boolean(isHighlighted),  // Garantindo que isHighlighted é um booleano
+            sequence: parseInt(sequence),
+            isHighlighted: Boolean(isHighlighted),
             backgroundImageUrl,
             category,
         });

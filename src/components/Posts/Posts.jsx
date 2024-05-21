@@ -8,6 +8,7 @@ import styles from './Posts.module.css';
 import Search from '../../assets/ion_search.svg';
 import OpenBook from '../../assets/Open-Book.svg';
 import { ModalPost } from '../Modal/ModalPost';
+import { Link } from 'react-router-dom';
 
 const Posts = () => {
     const { posts, removerPost, editPost, loadingDelete } = useAppContext();
@@ -72,7 +73,12 @@ const Posts = () => {
                         <h1>Post</h1>
                     </div>
                     <div>
-                        <a className={styles.addButton} onClick={handleAddClick}>Adicionar +</a>
+                        <Link
+                            className={styles.addButton}
+                            onClick={handleAddClick}
+                        >
+                            Adicionar +
+                        </Link>
                     </div>
                 </div>
                 <div className={styles.controls}>

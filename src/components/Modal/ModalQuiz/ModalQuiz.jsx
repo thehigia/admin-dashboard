@@ -1,8 +1,10 @@
 import { useState } from "react";
-import styles from './ModalQuiz.module.css';
 import { useAppContext } from "../../../hooks";
+import { Link } from "react-router-dom";
 
-const ModalQuiz = ({ onClose, initialTitle = '', initialSequence = 0, initialCategory = '', initialDescription = '', initialIsHighlighted = false, initialBackgroundImageUrl = '', onSave, isEditing = false }) => {
+import styles from './ModalQuiz.module.css';
+
+const ModalQuiz = ({ onClose, initialTitle = '', initialSequence = '', initialCategory = '', initialDescription = '', initialIsHighlighted = false, initialBackgroundImageUrl = '', onSave, isEditing = false }) => {
     const { addQuiz, category: categories } = useAppContext();
     const [title, setTitle] = useState(initialTitle);
     const [sequence, setSequence] = useState(initialSequence);
@@ -12,25 +14,19 @@ const ModalQuiz = ({ onClose, initialTitle = '', initialSequence = 0, initialCat
     const [backgroundImageUrl, setBackgroundImageUrl] = useState(initialBackgroundImageUrl);
 
     const handleSave = () => {
-        const parsedSequence = parseInt(sequence, 10);
-        if (!title.trim()) {
-            return;  // Garante que não salvamos títulos vazios ou apenas com espaços.
-        }
-
         if (isEditing) {
-            onSave({ title, description, sequence: isNaN(parsedSequence) ? 255 : parsedSequence, isHighlighted, backgroundImageUrl, category });
+            onSave({ title, description, sequence, isHighlighted, backgroundImageUrl, category });
         } else {
-            addQuiz(title, description, parseInt(sequence), Boolean(isHighlighted), backgroundImageUrl, category);
+            addQuiz({ title, description, sequence, isHighlighted, backgroundImageUrl, category });
         }
 
-        // Limpa os campos após salvar
         setTitle('');
         setSequence('');
         setDescription('');
         setCategory('');
         setIsHighlighted(false);
         setBackgroundImageUrl('');
-        onClose();  // Fecha o modal
+        onClose();
     };
 
     const submeterForm = (event) => {
@@ -68,7 +64,7 @@ const ModalQuiz = ({ onClose, initialTitle = '', initialSequence = 0, initialCat
         <div className={styles.modal}>
             <div className={styles.modalContent}>
                 <h3 className={styles.titleModal}>{isEditing ? 'Editar Quiz' : 'Novo Quiz'}</h3>
-                <p className={styles.subtitleModal}>Preencha os campos abaixo para criar um novo quiz</p>
+                <p className={styles.subtitleModal}>Preencha os campos abaixo para criar uma novo quiz</p>
                 <form className={styles.form} onSubmit={submeterForm}>
                     <div className={styles.labMod}>
                         <div className={styles.row}>
@@ -84,8 +80,18 @@ const ModalQuiz = ({ onClose, initialTitle = '', initialSequence = 0, initialCat
                                 />
                             </div>
                             <div className={styles.column02}>
-                                <label className={`${styles.labelModal} ${isEditing ? styles.labelDisabled : ""}`}>Categoria</label>
-                                <select className={styles.input} value={category} disabled={isEditing} onChange={(e) => setCategory(e.target.value)}>
+                                <label className={
+                                    `${styles.labelModal} 
+                                    ${isEditing ? styles.labelDisabled : ""}`
+                                }>
+                                    Categoria
+                                </label>
+                                <select
+                                    className={styles.input}
+                                    value={category}
+                                    disabled={isEditing}
+                                    onChange={(e) => setCategory(e.target.value)}
+                                >
                                     <option value="">Selecione uma categoria...</option>
                                     {categories.map((cat) => (
                                         <option key={cat.id} value={cat.title}>
@@ -97,19 +103,29 @@ const ModalQuiz = ({ onClose, initialTitle = '', initialSequence = 0, initialCat
                         </div>
                         <div className={styles.row}>
                             <div className={styles.column01}>
-                                <label className={`${styles.labelModal} ${isEditing ? styles.labelDisabled : ""}`}>Sequência</label>
+                                <label className={
+                                    `${styles.labelModal} 
+                                    ${isEditing ? styles.labelDisabled : ""}`
+                                }>
+                                    Sequência
+                                </label>
                                 <input
                                     className={styles.input}
                                     type="number"
-                                    placeholder='Escreva a sequência aqui...'
+                                    placeholder='Escreva o subtítulo aqui...'
                                     value={sequence}
-                                    disabled={isEditing}
                                     name="sequence"
+                                    disabled={isEditing}
                                     onChange={onChangeQuiz}
                                 />
                             </div>
                             <div className={styles.column}>
-                                <label className={`${styles.labelModal} ${isEditing ? styles.labelDisabled : ""}`}>URL da imagem de capa</label>
+                                <label className={
+                                    `${styles.labelModal}
+                                     ${isEditing ? styles.labelDisabled : ""}`
+                                }>
+                                    URL da imagem de capa
+                                </label>
                                 <input
                                     className={styles.input}
                                     type="text"
@@ -121,32 +137,19 @@ const ModalQuiz = ({ onClose, initialTitle = '', initialSequence = 0, initialCat
                                 />
                             </div>
                         </div>
-                        <div className={styles.row}>
-                            <div className={styles.column}>
-                                <label className={styles.labelModal}>Descrição</label>
-                                <textarea
-                                    className={styles.input}
-                                    placeholder='Escreva a descrição aqui...'
-                                    value={description}
-                                    name="description"
-                                    onChange={onChangeQuiz}
-                                />
-                            </div>
-                            <div className={styles.column}>
-                                <label className={styles.labelModal}>Destacar</label>
-                                <input
-                                    type="checkbox"
-                                    checked={isHighlighted}
-                                    name="isHighlighted"
-                                    onChange={onChangeQuiz}
-                                />
-                            </div>
-                        </div>
                     </div>
 
                     <div className={styles.modalButtons}>
-                        <a className={styles.btnCancel} onClick={onClose}>Cancelar</a>
-                        <button className={styles.btnSave} type="submit">Salvar</button>
+                        <Link
+                            className={styles.btnCancel}
+                            onClick={onClose}>
+                            Cancelar
+                        </Link>
+                        <Link
+                            className={styles.btnSave}
+                            onClick={handleSave}>
+                            Salvar
+                        </Link>
                     </div>
                 </form>
             </div>
