@@ -198,7 +198,7 @@ export const AppContextProvider = (props) => {
     const removerQuestao = async (idQuestao) => {
         // setLoadingDelete(true);
         try {
-            await api.delete(`/quiz/question/delete${idQuestao}`);
+            await api.delete(`/quiz/question/delete/${idQuestao}`);
             setQuestao(estadoAtual => {
                 const questaoAtualizadas = estadoAtual.filter(quest => quest.id !== idQuestao);
 
