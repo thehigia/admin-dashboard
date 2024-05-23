@@ -301,7 +301,7 @@ export const AppContextProvider = (props) => {
 
     const editQuestao = async (idQuestao, title, explanation, sequence, correctIndex, alternatives, quiz) => {
         try {
-            const { data: updatedQuestao } = await api.post(`/quiz/question/update/${idQuestao}`, {
+            const { data: updatedQuestao } = await api.put(`/quiz/question/update/${idQuestao}`, {
                 title,
                 explanation,
                 sequence: parseInt(sequence),
@@ -319,11 +319,8 @@ export const AppContextProvider = (props) => {
             getQuestao();
         } catch (error) {
             console.error('Erro ao atualizar o post:', error);
-            // Trate o erro conforme necessário
         }
     };
-
-
 
     useEffect(() => {
         getCateg();
