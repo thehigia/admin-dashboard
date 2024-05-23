@@ -6,7 +6,7 @@ import { Router } from './Router';
 const App = () => {
   return (
     <AppContextProvider>
-      <BrowserRouter>
+      <BrowserRouter basename="/way/dashboard">
         <Router />
       </BrowserRouter>
     </AppContextProvider>
