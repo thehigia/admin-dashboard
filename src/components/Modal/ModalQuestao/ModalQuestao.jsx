@@ -14,7 +14,6 @@ const ModalQuestao = ({ onClose, initialTitle = '', initialAlternatives = [], in
 
     const handleSave = () => {
         const payload = { title, quiz, alternatives, sequence, correctIndex, explanation };
-        console.log("Salvando questão com payload:", payload);
         if (isEditing) {
             onSave(payload);
         } else {

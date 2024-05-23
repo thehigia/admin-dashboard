@@ -45,17 +45,13 @@ const Questao = () => {
         setEditingQuest(null);
         setShowModal(true);
     };
+
     useEffect(() => {
-        console.log({ questao })
         if (questao) {
             const validQuests = questao.filter(ques => ques.title && typeof ques.title === 'string');
             setQuestaos(validQuests);
         }
     }, [questao]);
-
-    useEffect(() => {
-        console.log("editingQuest:", editingQuest);
-    }, [editingQuest]);
 
     const displayQuestoes = questaos
         .filter((ques) => ques.title.toLowerCase().includes(searchTerm.toLowerCase()))
